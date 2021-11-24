@@ -12,13 +12,13 @@ const MenuBar = () => {
     return (
         <Box className='menu-bar'>
             <Link className='logo' to='/'>
-                <Heading size="lg">my feed</Heading></Link>
+                <Heading size="m">new-arrivals</Heading></Link>
             <Box>
                 <Link to='/settings/favorites'>
                     <IconButton icon={<IoIosHeart />} />
                 </Link>
                 <Link to='/settings/shop'>
-                    <IconButton m={2}icon={<SettingsIcon/>}/ >
+                    <IconButton ml='1'icon={<SettingsIcon/>}/ >
                 </Link>
             </Box>
 

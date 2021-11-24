@@ -6,7 +6,9 @@ const SiteButton = (props) => {
             <Button onClick={props.filter}
                 value={props.name}
                 margin='1'
-                colorScheme={props.isActive ? 'blue' : 'teal'}>
+                variant={props.isActive ?'solid':'ghost'  }
+                colorScheme="gray">
+                
                 {props.name}
             </Button>
         </>

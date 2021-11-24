@@ -9,11 +9,12 @@ import MenuBar from './components/UI/MenuBar';
 import Feed from './components/Feed';
 import Settings from './components/Settings';
 import ShopSearch from './components/UI/ShopSearch';
-
+import LazyLoad from 'react-lazyload';
 
 
 import {
-
+  Skeleton,
+  Spinner,
   Modal,
   ModalOverlay,
   Box,
@@ -113,6 +114,7 @@ function App() {
     const filterShopsCopy = [...shops];
     filterShopsCopy[index].isActive = !filterShopsCopy[index].isActive;
     setShops(filterShopsCopy)
+    
   }
 
   //return active shops
@@ -122,33 +124,43 @@ function App() {
 
   const myFavorites = favorites.map((product, index) => {
     return (
-      <ProductItem
-        key={index}
-        toggleFavorite={favoriteItem}
-        store={product.store}
-        url={product.url}
-        img={product.img}
-        brand={product.brand}
-        title={product.title}
-        price={product.price}
-        isFavorite={favorites.find((item)=> item.title === product.title)}
-      ></ProductItem>)
+      <>
+
+        <ProductItem
+          key={index}
+          loading={loading}
+          toggleFavorite={favoriteItem}
+          store={product.store}
+          url={product.url}
+          img={product.img}
+          brand={product.brand}
+          title={product.title}
+          price={product.price}
+          isFavorite={favorites.find((item) => item.title === product.title)}
+        ></ProductItem>
+
+      </>)
+
   })
 
   //return products filtered by active filter
   const products = allProducts.filter(product => active.includes(product.store)).map((product, index) => {
     return (
-      <ProductItem
-        key={index}
-        toggleFavorite={favoriteItem}
-        store={product.store}
-        url={product.url}
-        img={product.img}
-        brand={product.brand}
-        title={product.title}
-        price={product.price}
-        isFavorite={favorites.find((item)=> item.title === product.title)}
-      ></ProductItem>
+
+       <LazyLoad key={index}>
+        <ProductItem
+          key={index}
+          loading={loading}
+          toggleFavorite={favoriteItem}
+          store={product.store}
+          url={product.url}
+          img={product.img}
+          brand={product.brand}
+          title={product.title}
+          price={product.price}
+          isFavorite={favorites.find((item) => item.title === product.title)}
+        ></ProductItem>
+     </LazyLoad>
     )
   })
 
@@ -172,10 +184,10 @@ function App() {
         </Routes>
       </Router>
 
-      <Modal isOpen={loading}>
+      {/* <Modal isOpen={loading}>
         <ModalOverlay>
         </ModalOverlay>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

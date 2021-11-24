@@ -215,12 +215,6 @@ const zaraW = () =>{axios(zaraWNewArrivals)
 }
 
 
-tresbien()
-haven()
-uniqloW()
-uniqloM()
-
-
 setInterval(() => {
     tresbien()
     haven()
