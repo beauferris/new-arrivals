@@ -147,7 +147,7 @@ function App() {
   const products = allProducts.filter(product => active.includes(product.store)).map((product, index) => {
     return (
 
-       <LazyLoad key={index}>
+      //  <LazyLoad key={index} placeholder={<p>loading...</p>}>
         <ProductItem
           key={index}
           loading={loading}
@@ -160,7 +160,7 @@ function App() {
           price={product.price}
           isFavorite={favorites.find((item) => item.title === product.title)}
         ></ProductItem>
-     </LazyLoad>
+    //  </LazyLoad>
     )
   })
 
