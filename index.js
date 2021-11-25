@@ -214,6 +214,11 @@ const zaraW = () =>{axios(zaraWNewArrivals)
     }).catch(error => console.log('errorunzaraw'))
 }
 
+tresbien()
+haven()
+uniqloW()
+uniqloM()
+
 
 setInterval(() => {
     tresbien()

@@ -1,24 +1,26 @@
 
 import './MenuBar.css';
-import { Heading, Box, IconButton } from "@chakra-ui/react"
-import { IoIosHeart } from 'react-icons/io'
-
+import { Heading, Box, IconButton, Button, useColorMode } from "@chakra-ui/react"
+import { IoIosHeart, IoMdMoon, IoMdSunny } from 'react-icons/io'
 import { SettingsIcon } from '@chakra-ui/icons';
 import {
     Link
 } from "react-router-dom";
 
 const MenuBar = () => {
+    const { colorMode, toggleColorMode } = useColorMode()
     return (
         <Box className='menu-bar'>
             <Link className='logo' to='/'>
-                <Heading size="m">new-arrivals</Heading></Link>
+                <Heading size="m">punpunpun</Heading></Link>
             <Box>
+                {/* <IconButton mr='1' onClick={toggleColorMode}
+                    icon={colorMode === "light" ? <IoMdMoon /> : <IoMdSunny />} /> */}
                 <Link to='/settings/favorites'>
                     <IconButton icon={<IoIosHeart />} />
                 </Link>
                 <Link to='/settings/shop'>
-                    <IconButton ml='1'icon={<SettingsIcon/>}/ >
+                    <IconButton ml='1' icon={<SettingsIcon />} />
                 </Link>
             </Box>
 

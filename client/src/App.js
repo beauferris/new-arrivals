@@ -125,7 +125,6 @@ function App() {
   const myFavorites = favorites.map((product, index) => {
     return (
       <>
-
         <ProductItem
           key={index}
           loading={loading}
@@ -138,9 +137,7 @@ function App() {
           price={product.price}
           isFavorite={favorites.find((item) => item.title === product.title)}
         ></ProductItem>
-
       </>)
-
   })
 
   //return products filtered by active filter

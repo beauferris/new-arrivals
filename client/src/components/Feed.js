@@ -1,9 +1,5 @@
 import {
-    SkeletonText,
-    Spinner,
-    Box,
-    SimpleGrid,
-    Skeleton
+    Box
 
 } from '@chakra-ui/react';
 import './Feed.css';
@@ -49,7 +45,13 @@ const Feed = (props) => {
 
     return (
         <>
-            <Box className='site-bar' >
+            <Box
+                position='sticky'
+                top='0'
+                backdropFilter='blur(10px)'
+                zIndex='1'
+                width='100%'
+                className='site-bar' >
                 {props.mySites}
             </Box>
 

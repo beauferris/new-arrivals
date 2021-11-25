@@ -10,7 +10,7 @@ import {
     IconButton,
     GridItem,
     Skeleton,
-    SkeletonCircle
+    SkeletonText
 } from "@chakra-ui/react"
 
 import { IoIosHeart, IoIosHeartEmpty } from 'react-icons/io'
@@ -43,10 +43,10 @@ const ProductItem = (props) => {
                     icon={favorited ? <IoIosHeart style={{ color: 'red' }} /> : <IoIosHeartEmpty style={{ color: 'red' }} />}
                 /></Skeleton></GridItem>  
                 
-            <Skeleton speed='2' isLoaded={!props.loading} >
+            <SkeletonText speed='2' mb='2' isLoaded={!props.loading} >
                 <Heading colSpan={1}  m='0' p='0' fontSize='md'>{props.store}</Heading>
                 <Text fontSize='m'>{props.title ?? 'sampletext'}</Text>
-                </Skeleton>
+                </SkeletonText>
             </Grid>
         </Box>
        
