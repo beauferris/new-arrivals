@@ -62,7 +62,7 @@ function App() {
 
   useEffect(() => {
     fetchProducts();
-  }, [allProducts])
+  }, [shops])
 
 
   const searchListener = (event) => {

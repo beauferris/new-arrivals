@@ -8,9 +8,7 @@ const Settings = () => {
 
     return (
         <Box className='settings'>
-            <Box className='sidebar'>
-                <Sidebar />
-            </Box>
+     
 
             <Box className='settings-info'>
                 <Outlet />
