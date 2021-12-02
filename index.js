@@ -29,7 +29,7 @@ async function run(products) {
         const col = db.collection("products");
         let myProducts = products
         for (const product of myProducts) {
-            const check = await col.find({ "title": product.title }).count(1)>=1
+            const check = await col.find({ "title": product.title }).count(1) >= 1
 
             if (check) {
                 //col.deleteMany({"title":product.title});
@@ -40,7 +40,7 @@ async function run(products) {
                 console.log(product)
             }
         }
-        
+
     } catch (err) {
         console.log(err.stack)
     }
@@ -53,7 +53,42 @@ const havenshop = 'https://shop.havenshop.com/collections/new-arrivals?_ga=2.307
 const uniqloMShop = "https://www.uniqlo.com/us/en/men/new-arrivals"
 const uniqloWShop = "https://www.uniqlo.com/us/en/women/new-arrivals"
 const zaraWNewArrivals = "https://www.zara.com/ca/en/woman-new-in-l1180.html?v1=1881787"
+const kollectionNewArrivals = "https://kollektion.ca/collections/furniture-lighting/products.json"
 
+//get new arrivals tres bien
+const kollection = () => {
+    axios(kollectionNewArrivals)
+        .then(res => {
+            const json = res.data.products
+            let products = []
+
+
+            json.map((item) => {
+
+                const title = item.title
+                const url = 'https://kollektion.ca/collections/furniture-lighting/products/' + item.handle
+                
+                const img = item.images[0].src
+                const price = item.variants[0].price
+
+                const product = {
+                    title,
+                    url,
+                    img,
+                    price,
+                    store: 'kollektion',
+                    date: Date.now()
+                }
+
+                console.log(product)
+                products.push(product)
+            })
+
+            run(products)
+        }).catch(error => console.log('error'))
+}
+
+kollection()
 //get new arrivals tres bien
 const tresbien = () => {
     axios(tres)
@@ -88,144 +123,148 @@ const tresbien = () => {
 
 
 //get new arrivals haven shop
-const haven = () =>{axios(havenshop)
-    .then(res => {
-        const html = res.data
-        const $ = cheerio.load(html)
-        const products = []
-        $('.shop-products a', html).each(function () {
-            // const title = $(this).find('a').text()
-            const brand = $(this).find('.product-card-brand').text()
-            const title = $(this).find('.product-card-name').text()
-            const price = $(this).find('.product-price').text().trim()
-            const url = $(this).attr('href')
-            const img = $(this).find('.product-image-wrapper').find('img').attr('srcset')
+const haven = () => {
+    axios(havenshop)
+        .then(res => {
+            const html = res.data
+            const $ = cheerio.load(html)
+            const products = []
+            $('.shop-products a', html).each(function () {
+                // const title = $(this).find('a').text()
+                const brand = $(this).find('.product-card-brand').text()
+                const title = $(this).find('.product-card-name').text()
+                const price = $(this).find('.product-price').text().trim()
+                const url = $(this).attr('href')
+                const img = $(this).find('.product-image-wrapper').find('img').attr('srcset')
 
-            const product = {
-                brand,
-                title,
-                price,
-                url,
-                img,
-                store: 'haven',
-                date: Date.now()
-            }
-            products.push(product)
-        })
-        run(products)
-    }).catch(error => console.log('error'))
+                const product = {
+                    brand,
+                    title,
+                    price,
+                    url,
+                    img,
+                    store: 'haven',
+                    date: Date.now()
+                }
+                products.push(product)
+            })
+            run(products)
+        }).catch(error => console.log('error'))
 }
 
 
 
-const uniqloW = () =>{axios(uniqloWShop)
-    .then(res => {
-        const html = res.data
-        const $ = cheerio.load(html)
-        const products = []
-        $('.product-tile', html).each(function () {
-            // const title = $(this).find('a').text()
-            const brand = $(this).find('a').text()
-            const title = $(this).find('.link').text()
-            const price = $(this).find('.value').text().trim()
-            const url = "https://uniqlo.com" + $(this).find('a').attr('href')
-            const img = $(this).find('.tile-image').attr('src')
+const uniqloW = () => {
+    axios(uniqloWShop)
+        .then(res => {
+            const html = res.data
+            const $ = cheerio.load(html)
+            const products = []
+            $('.product-tile', html).each(function () {
+                // const title = $(this).find('a').text()
+                const brand = $(this).find('a').text()
+                const title = $(this).find('.link').text()
+                const price = $(this).find('.value').text().trim()
+                const url = "https://uniqlo.com" + $(this).find('a').attr('href')
+                const img = $(this).find('.tile-image').attr('src')
 
 
 
-            const product = {
-                brand: 'uniqlo',
-                title,
-                price,
-                url,
-                img,
-                store: 'uniqlo-womens',
-                date: Date.now()
-            }
-            products.push(product)
+                const product = {
+                    brand: 'uniqlo',
+                    title,
+                    price,
+                    url,
+                    img,
+                    store: 'uniqlo-womens',
+                    date: Date.now()
+                }
+                products.push(product)
 
 
-        })
-        run(products)
+            })
+            run(products)
 
-    }).catch(error => console.log('error uniqlow'))
+        }).catch(error => console.log('error uniqlow'))
 }
 
 
 
-const uniqloM = () =>{axios(uniqloMShop)
-    .then(res => {
-        const html = res.data
-        const $ = cheerio.load(html)
-        const products=[]
-        $('.product-tile', html).each(function () {
-            // const title = $(this).find('a').text()
-            // const brand = $(this).find('a').text()
-            const title = $(this).find('.link').text()
-            const price = $(this).find('.value').text().trim()
-            const url = "https://uniqlo.com" + $(this).find('a').attr('href')
-            const img = $(this).find('.tile-image').attr('src')
+const uniqloM = () => {
+    axios(uniqloMShop)
+        .then(res => {
+            const html = res.data
+            const $ = cheerio.load(html)
+            const products = []
+            $('.product-tile', html).each(function () {
+                // const title = $(this).find('a').text()
+                // const brand = $(this).find('a').text()
+                const title = $(this).find('.link').text()
+                const price = $(this).find('.value').text().trim()
+                const url = "https://uniqlo.com" + $(this).find('a').attr('href')
+                const img = $(this).find('.tile-image').attr('src')
 
 
-            const product = {
-                brand: 'uniqlo',
-                title,
-                price,
-                url,
-                img,
-                store: 'uniqlo-mens',
-                date: Date.now()
-            }
-            products.push(product)
-        })
-        run(products)
-    }).catch(error => console.log('erroruniqlom'))
+                const product = {
+                    brand: 'uniqlo',
+                    title,
+                    price,
+                    url,
+                    img,
+                    store: 'uniqlo-mens',
+                    date: Date.now()
+                }
+                products.push(product)
+            })
+            run(products)
+        }).catch(error => console.log('erroruniqlom'))
 }
 
-const zaraW = () =>{axios(zaraWNewArrivals)
-    .then(res => {
-        const html = res.data
-        const $ = cheerio.load(html)
-        const products=[]
-        $('.product-grid-product', html).each(function () {
-           
-            // const title = $(this).find('a').text()
-            // const brand = $(this).find('a').text()
-            const title = $(this).find('.link').text()
-            const price = $(this).find('.price__amount-current').text().trim()
-            const url = $(this).find('a').attr('href')
-            const img = $(this).find('img').attr('src')
+const zaraW = () => {
+    axios(zaraWNewArrivals)
+        .then(res => {
+            const html = res.data
+            const $ = cheerio.load(html)
+            const products = []
+            $('.product-grid-product', html).each(function () {
+
+                // const title = $(this).find('a').text()
+                // const brand = $(this).find('a').text()
+                const title = $(this).find('.link').text()
+                const price = $(this).find('.price__amount-current').text().trim()
+                const url = $(this).find('a').attr('href')
+                const img = $(this).find('img').attr('src')
 
 
-            const product = {
-                brand: 'zara',
-                title,
-                price,
-                url,
-                img,
-                store: 'zara-womens',
-                date: Date.now()
-            }
-            
-            products.push(product)
-            console.log(product)
-        })
-         //run(products)
-    }).catch(error => console.log('errorunzaraw'))
+                const product = {
+                    brand: 'zara',
+                    title,
+                    price,
+                    url,
+                    img,
+                    store: 'zara-womens',
+                    date: Date.now()
+                }
+
+                products.push(product)
+                console.log(product)
+            })
+            //run(products)
+        }).catch(error => console.log('errorunzaraw'))
 }
 
-tresbien()
-haven()
-uniqloW()
-uniqloM()
+// tresbien()
+// haven()
+// uniqloW()
+// uniqloM()
 
 
-setInterval(() => {
-    tresbien()
-    haven()
-    uniqloW()
-    uniqloM()
-}, 10000*60*60 ); 
+// setInterval(() => {
+//     tresbien()
+//     haven()
+//     uniqloW()
+//     uniqloM()
+// }, 10000*60*60 ); 
 
 // ... other imports 
 

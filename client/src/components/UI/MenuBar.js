@@ -1,7 +1,8 @@
 
 import './MenuBar.css';
 import { Heading, Box, IconButton, Button, useColorMode } from "@chakra-ui/react"
-import { IoIosHeart, IoMdMoon, IoMdSunny } from 'react-icons/io'
+import { IoIosHeart,IoMdMoon, IoMdSunny } from 'react-icons/io'
+import { GiHanger} from 'react-icons/gi'
 import { SettingsIcon } from '@chakra-ui/icons';
 import {
     Link
@@ -12,7 +13,7 @@ const MenuBar = () => {
     return (
         <Box className='menu-bar'>
             <Link className='logo' to='/'>
-                <Heading size="m">punpunpun</Heading></Link>
+                <IconButton icon={<GiHanger/>}/> </Link>
             <Box>
                 {/* <IconButton mr='1' onClick={toggleColorMode}
                     icon={colorMode === "light" ? <IoMdMoon /> : <IoMdSunny />} /> */}

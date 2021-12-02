@@ -34,7 +34,7 @@ const allShops = [{ name: "tres-bien", isActive: true, checked: true },
 { name: "haven", isActive: true, checked: false },
 { name: "uniqlo-womens", isActive: true, checked: true },
 { name: "uniqlo-mens", isActive: true, checked: true },
-{ name: "zara-mens", isActive: true, checked: true },
+{ name: "kollektion", isActive: true, checked: true },
 { name: "zara-womens", isActive: true, checked: true }]
 
 

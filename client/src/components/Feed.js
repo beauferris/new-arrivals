@@ -48,7 +48,8 @@ const Feed = (props) => {
             <Box
                 position='sticky'
                 top='0'
-                backdropFilter='blur(10px)'
+                backdropFilter='blur(15px)'
+                bgColor="rgb(249, 249, 249,0.85)"
                 zIndex='1'
                 width='100%'
                 className='site-bar' >
