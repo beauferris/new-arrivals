@@ -4,7 +4,7 @@ import axios from 'axios';
 // import data from '../src/products.json'
 import ProductItem from './components/ProductItem';
 import SiteButton from './components/SiteButton';
-
+import Logo from './assets/uniqlo.svg'
 import MenuBar from './components/UI/MenuBar';
 import Feed from './components/Feed';
 import Settings from './components/Settings';
@@ -30,12 +30,14 @@ import {
 } from "react-router-dom";
 
 
-const allShops = [{ name: "tres-bien", isActive: true, checked: true },
-{ name: "haven", isActive: true, checked: false },
-{ name: "uniqlo-womens", isActive: true, checked: true },
-{ name: "uniqlo-mens", isActive: true, checked: true },
-{ name: "kollektion", isActive: true, checked: true },
-{ name: "zara-womens", isActive: true, checked: true }]
+const allShops = [{ name: "tres-bien", isActive: true, checked: true ,logo:'./assets/tres.png'},
+{ name: "haven", isActive: true, checked: true,logo:'./assets/haven.jpg' },
+{ name: "uniqlo-womens", isActive: true, checked: true, logo:'./assets/uniqlo.svg' },
+{ name: "uniqlo-mens", isActive: true, checked: true, logo:'./assets/uniqlo.svg' },
+{ name: "stussy", isActive: true, checked: true, logo:'https://cdn.shopify.com/s/files/1/0087/6193/3920/files/Favicon_2_32x32.jpg?v=1565574875' },
+{ name: "kollektion", isActive: true, checked: true, logo:'http://cdn.shopify.com/s/files/1/0400/9951/2488/files/Website_Thumbnail_Preview_6542ac34-ab12-45ae-96cb-6bace68e3bc3_1200x1200.png?v=1622735587' },
+{ name: "DSM", isActive: true, checked: true, logo:'./assets/dsm.png'},
+{ name: "less 17", isActive: true, checked: true, logo:'./assets/less.png'}]
 
 
 function App() {
@@ -164,7 +166,7 @@ function App() {
 
   //return user picked sites
   const mySites = shops.filter(shop => shop.checked === true).map((site, index) =>
-    <SiteButton key={index} name={site.name} isActive={site.isActive} filter={updateShops} />
+    <SiteButton logo={site.logo} key={index} name={site.name} isActive={site.isActive} filter={updateShops} />
   )
 
   return (
