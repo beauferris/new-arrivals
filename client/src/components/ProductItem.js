@@ -1,5 +1,3 @@
-import './ProductItem.css'
-
 import {
     Box,
     Text,

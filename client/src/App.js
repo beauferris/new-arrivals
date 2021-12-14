@@ -1,22 +1,17 @@
+
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import data from '../src/products.json'
 import ProductItem from './components/ProductItem';
 import SiteButton from './components/SiteButton';
-import Logo from './assets/uniqlo.svg'
 import MenuBar from './components/UI/MenuBar';
 import Feed from './components/Feed';
 import Settings from './components/Settings';
 import ShopSearch from './components/UI/ShopSearch';
-import LazyLoad from 'react-lazyload';
-
+// import LazyLoad from 'react-lazyload';
+import AddShop from './components/AddShop';
 
 import {
-  Skeleton,
-  Spinner,
-  Modal,
-  ModalOverlay,
   Box,
   useToast,
   Divider
@@ -26,28 +21,18 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-
 } from "react-router-dom";
-
-
-const allShops = [{ name: "tres-bien", isActive: true, checked: true ,logo:'./assets/tres.png'},
-{ name: "haven", isActive: true, checked: true,logo:'./assets/haven.jpg' },
-{ name: "uniqlo-womens", isActive: true, checked: true, logo:'./assets/uniqlo.svg' },
-{ name: "uniqlo-mens", isActive: true, checked: true, logo:'./assets/uniqlo.svg' },
-{ name: "stussy", isActive: true, checked: true, logo:'https://cdn.shopify.com/s/files/1/0087/6193/3920/files/Favicon_2_32x32.jpg?v=1565574875' },
-{ name: "kollektion", isActive: true, checked: true, logo:'http://cdn.shopify.com/s/files/1/0400/9951/2488/files/Website_Thumbnail_Preview_6542ac34-ab12-45ae-96cb-6bace68e3bc3_1200x1200.png?v=1622735587' },
-{ name: "DSM", isActive: true, checked: true, logo:'./assets/dsm.png'},
-{ name: "less 17", isActive: true, checked: true, logo:'./assets/less.png'}]
+import { GiRss } from 'react-icons/gi';
 
 
 function App() {
-
-  const [shops, setShops] = useState(JSON.parse(localStorage.getItem('localShops')) || allShops)
+  const [shops, setShops] = useState([])
   const [search, setSearch] = useState("")
   const [allProducts, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('localFavorites')) || [])
   const toast = useToast()
+  const [myShops, setMyShops] = useState(JSON.parse(localStorage.getItem('localShops')) || [])
 
   const fetchProducts = () => {
     axios.get("https://calm-harbor-25651.herokuapp.com/products")
@@ -57,15 +42,31 @@ function App() {
       }).catch(err => console.log(`Error: ${err}`));
   }
 
+  const fetchShops = () => {
+    axios.get("https://calm-harbor-25651.herokuapp.com/shops")
+      .then(res => {
+
+        if(JSON.parse(localStorage.getItem('localShops')).length === 0){
+          localStorage.setItem('localShops', JSON.stringify(res.data))
+        }
+        setMyShops(JSON.parse(localStorage.getItem('localShops'))||res.data) 
+
+        // 
+      }).catch(err => console.log(`Error: ${err}`));
+  }
+
   useEffect(() => {
-    localStorage.setItem('localShops', JSON.stringify(shops))
+    localStorage.setItem('localShops', JSON.stringify(myShops))
     localStorage.setItem('localFavorites', JSON.stringify(favorites))
-  }, [favorites, shops])
+  }, [favorites, myShops])
 
   useEffect(() => {
     fetchProducts();
-  }, [shops])
+  }, [myShops])
 
+  useEffect(() => {
+    fetchShops();
+  }, [])
 
   const searchListener = (event) => {
     setSearch(event.target.value)
@@ -91,13 +92,12 @@ function App() {
 
   //add shop to user list
   const toggleShop = (event) => {
-    const index = shops.findIndex(shop => shop.name === event.target.value);
-    const shopsCopy = [...shops];
-
-    shopsCopy[index].checked ? shopsCopy[index].isActive = false : shopsCopy[index].isActive = true;
-    shopsCopy[index].checked = !shopsCopy[index].checked;
-    setShops(shopsCopy)
-
+    const index = myShops.findIndex(shop => shop.name === event.target.value);
+    const shopsCopy = [...myShops];
+    shopsCopy[index].checked = !JSON.parse(shopsCopy[index].checked) 
+    shopsCopy[index].isActive = shopsCopy[index].checked
+    setMyShops(shopsCopy)
+    
     toast({
       position: "bottom-left",
       duration: 2000,
@@ -108,19 +108,19 @@ function App() {
       ),
     })
   }
-
+  
   //update shop filter on click
   const updateShops = (event) => {
     setLoading(true)
-    const index = shops.findIndex(site => site.name === event.target.value);
-    const filterShopsCopy = [...shops];
-    filterShopsCopy[index].isActive = !filterShopsCopy[index].isActive;
-    setShops(filterShopsCopy)
-    
+    const index = myShops.findIndex(site => site.name === event.target.value);
+    const filterShopsCopy = [...myShops];
+    filterShopsCopy[index].isActive = !JSON.parse(filterShopsCopy[index].isActive);
+    setMyShops(filterShopsCopy)
+
   }
 
   //return active shops
-  const active = shops.filter(site => site.isActive === true).map(store => {
+  const active = myShops.filter(site => JSON.parse(site.isActive) === true).map(store => {
     return store.name
   })
 
@@ -145,27 +145,25 @@ function App() {
   //return products filtered by active filter
   const products = allProducts.filter(product => active.includes(product.store)).map((product, index) => {
     return (
-
       //  <LazyLoad key={index} placeholder={<p>loading...</p>}>
-        <ProductItem
-          key={index}
-          loading={loading}
-          toggleFavorite={favoriteItem}
-          store={product.store}
-          url={product.url}
-          img={product.img}
-          brand={product.brand}
-          title={product.title}
-          price={product.price}
-          isFavorite={favorites.find((item) => item.title === product.title)}
-        ></ProductItem>
-    //  </LazyLoad>
+      <ProductItem
+        key={product.id}
+        loading={loading}
+        toggleFavorite={favoriteItem}
+        store={product.store}
+        url={product.url}
+        img={product.img}
+        brand={product.brand}
+        title={product.title}
+        price={product.price}
+        isFavorite={favorites.find((item) => item.title === product.title)}
+      ></ProductItem>
+      //  </LazyLoad>
     )
   })
 
-
   //return user picked sites
-  const mySites = shops.filter(shop => shop.checked === true).map((site, index) =>
+  const mySites = myShops.filter(shop => JSON.parse(shop.checked) === true).map((site, index) =>
     <SiteButton logo={site.logo} key={index} name={site.name} isActive={site.isActive} filter={updateShops} />
   )
 
@@ -177,16 +175,12 @@ function App() {
         <Routes>
           <Route path='/' element={<Feed loading={loading} mySites={mySites} products={products} />} />
           <Route path='/settings' element={<Settings />}>
-            <Route path='shop' element={<ShopSearch search={search} toggle={toggleShop} sites={shops} searchInput={searchListener} />} />
-            <Route path='favorites' element={<Feed products={myFavorites} />} />
+            <Route path='shop' element={<ShopSearch search={search} toggle={toggleShop} sites={myShops} searchInput={searchListener} />} />
           </Route>
+          <Route path='favorites' element={<Feed products={myFavorites} />} />
+          <Route path='add' element={<AddShop />} />
         </Routes>
       </Router>
-
-      {/* <Modal isOpen={loading}>
-        <ModalOverlay>
-        </ModalOverlay>
-      </Modal> */}
     </div>
   );
 }

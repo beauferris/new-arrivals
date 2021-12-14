@@ -1,32 +1,34 @@
-
+//IoMdMoon, IoMdSunny
 import './MenuBar.css';
-import { Heading, Box, IconButton, Button, useColorMode } from "@chakra-ui/react"
-import { IoIosHeart, IoMdMoon, IoMdSunny } from 'react-icons/io'
+import { Box, IconButton} from "@chakra-ui/react"
+import { IoIosHeart, IoIosAdd} from 'react-icons/io'
 import { GiHanger } from 'react-icons/gi'
 import { SettingsIcon } from '@chakra-ui/icons';
-import {
-    Link
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const MenuBar = () => {
-    const { colorMode, toggleColorMode } = useColorMode()
     return (
         <Box
             bgColor="rgb(249, 249, 249,0.85)"
             className='menu-bar'>
             <Link className='logo' to='/'>
                 <IconButton icon={<GiHanger />} /> </Link>
-            <Box>
-                {/* <IconButton mr='1' onClick={toggleColorMode}
+            <Box >
+                {/* <IconButton  onClick={toggleColorMode}
                     icon={colorMode === "light" ? <IoMdMoon /> : <IoMdSunny />} /> */}
-                <Link to='/settings/favorites'>
-                    <IconButton icon={<IoIosHeart />} />
+
+                <Link to='/favorites'>
+                    <IconButton mr='1' icon={<IoIosHeart />} />
                 </Link>
+
+                <Link className='logo' to='/add'>
+                    <IconButton mr='1' icon={<IoIosAdd />} />
+                </Link>
+
                 <Link to='/settings/shop'>
-                    <IconButton ml='1' icon={<SettingsIcon />} />
+                    <IconButton icon={<SettingsIcon />} />
                 </Link>
             </Box>
-
         </Box>
     )
 }
