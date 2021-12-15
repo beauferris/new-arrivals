@@ -98,7 +98,7 @@ setInterval(()=>{
     shops()
 },10000 * 60 * 60)
 
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname, "frontend", "client", "index.html"));
 
 });
@@ -111,3 +111,4 @@ app.listen(port, () => {
         if (err) console.log(err)
     })
 })
+ 
