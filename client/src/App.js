@@ -175,10 +175,10 @@ function App() {
         <Routes>
           <Route exact path='/' element={<Feed loading={loading} mySites={mySites} products={products} />} />
           <Route path='/settings' element={<Settings />}>
-            <Route path='shop' element={<ShopSearch search={search} toggle={toggleShop} sites={myShops} searchInput={searchListener} />} />
+            <Route path='/shop' element={<ShopSearch search={search} toggle={toggleShop} sites={myShops} searchInput={searchListener} />} />
           </Route>
-          <Route path='favorites' element={<Feed products={myFavorites} />} />
-          <Route path='add' element={<AddShop />} />
+          <Route path='/favorites' element={<Feed products={myFavorites} />} />
+          <Route path='/add' element={<AddShop />} />
         </Routes>
       </Router>
     </div>
