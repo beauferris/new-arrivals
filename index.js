@@ -99,9 +99,9 @@ setInterval(()=>{
 },10000 * 60 * 60)
 
 app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "index.html"));
-
+    res.sendFile(path.join(__dirname, "client", "/public/index.html"));
 });
+
 
 const port = process.env.PORT || 3001;
 
