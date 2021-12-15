@@ -18,7 +18,7 @@ const { MongoClient } = require("mongodb")
 const client = new MongoClient(process.env.ATLAS_URI);
 
 const dbName = 'lets-shop';
-app.use(express.static(path.join(__dirname, "client", "build")))
+app.use(express.static(path.join(__dirname,"./client/build/index.html")))
 
 async function run(products) {
     try {
