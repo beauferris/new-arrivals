@@ -173,7 +173,7 @@ function App() {
         <MenuBar />
         <Divider />
         <Routes>
-          <Route path='/' element={<Feed loading={loading} mySites={mySites} products={products} />} />
+          <Route exact path='/' element={<Feed loading={loading} mySites={mySites} products={products} />} />
           <Route path='/settings' element={<Settings />}>
             <Route path='shop' element={<ShopSearch search={search} toggle={toggleShop} sites={myShops} searchInput={searchListener} />} />
           </Route>
