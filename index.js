@@ -95,7 +95,7 @@ exports.new_arrivals = getShopifyNewArrivals;
 shops()
 
 setInterval(()=>{
-
+    shops()
 },10000 * 60 * 60)
 
 app.get("*", (req, res) => {

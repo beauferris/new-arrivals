@@ -54,15 +54,14 @@ recordRoutes.route("/create").post(async (req, res, next) => {
                     .insertOne(shop, (err, result) => {
                         if (err) throw err
                     })
-                shops.new_arrivals(shop.url,shop.name)    
-        
+                res.send(shop.name+"Added")
+                shops.new_arrivals(shop.url,shop.name)   
+
             }
         }
     }
 
     checkJSON(req.body.url)
 })
-
-
 
 module.exports = recordRoutes

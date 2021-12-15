@@ -41,11 +41,11 @@ const AddShop = (props) => {
                         let stored = JSON.parse(localStorage.getItem("localShops"))
                         stored.push(shopObject)
                         localStorage.setItem("localShops", JSON.stringify(stored))
-    
                         setErrorMessage(shopObject.name + " Added!")
                     }
                 }).catch((error) => {
                     console.log(error)
+                    setErrorMessage("Incorrect URL format")
                 })
         }catch (error) {
             setErrorMessage("Incorrect URL format")
@@ -55,7 +55,7 @@ const AddShop = (props) => {
     return (
         <Box m='2'>
             <form onSubmit={submitUrl}>
-                <FormLabel htmlFor='url'>Add a Shop</FormLabel>
+                <FormLabel htmlFor='url'>Add a shop</FormLabel>
                 <InputGroup>
                     <InputLeftAddon >https://</InputLeftAddon>
                     <Input
@@ -65,7 +65,7 @@ const AddShop = (props) => {
                         onChange={onUrlChange}
                         mb='2'
                     />
-                    <InputRightAddon >/products.json</InputRightAddon>
+                
 
                 </InputGroup>
                 {error ? <h1>{error}</h1> : ""}
