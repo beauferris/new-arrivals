@@ -28,7 +28,7 @@ const AddShop = (props) => {
                 name: shopURL.host
             }
     
-            axios.post('http://localhost:5001/create', shopObject)
+            axios.post('https://calm-harbor-25651.herokuapp.com/create', shopObject)
                 .then((res) => {
                     if (res.data === "store already exists") {
                         console.log("Store Already Exists")
