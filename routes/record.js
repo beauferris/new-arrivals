@@ -34,16 +34,34 @@ recordRoutes.route("/products").get(function (req, res) {
 recordRoutes.route("/create").post(async (req, res, next) => {
     let shops = require("../index.js")
     let db_connect = dbo.getDb("lets-shop");
-
-
-   
+    
+    let favicon = []
+    const getFavicon = (url) =>{
+        axios(url)
+        .then(res => {
+            const html = res.data
+            const $ = cheerio.load(html)
+    
+            let products = []
+            $('link', html).each(function () {
+                
+                if($(this).attr('rel')==='icon'){
+                    favicon.push($(this).attr('href'))
+                }
+            })
+    
+            
+        })
+    }
+    
+    getFavicon(req.body.name)
 
     let shop = {
         url: req.body.url,
         name: req.body.name,
         checked: "false",
         isActive: "false",
-        favicon: "true"
+        favicon: favicon[0]
     }
 
     const checkJSON = async (products_url) => {
@@ -61,7 +79,6 @@ recordRoutes.route("/create").post(async (req, res, next) => {
                     })
                 res.send(shop.name+"Added")
                 shops.new_arrivals(shop.url,shop.name)   
-
             }
         }
     }

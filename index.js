@@ -50,7 +50,6 @@ async function run(products) {
 
 
 
-
 const getShopifyNewArrivals = ((products_url, store) => {
     axios(products_url)
         .then(res => {
@@ -106,7 +105,7 @@ app.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname,"./client/build/index.html"));
 });
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 5001;
 
 app.listen(port, () => {
     console.log(`server running on PORT ${port}`)
