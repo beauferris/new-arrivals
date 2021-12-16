@@ -80,8 +80,7 @@ const AddShop = (props) => {
                         onChange={onUrlChange}
                         mb='2'
                     />
-
-
+                    
                 </InputGroup>
                 {error ? <h1>{error}</h1> : ""}
                 <Button type="submit">Add</Button>
