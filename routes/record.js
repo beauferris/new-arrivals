@@ -34,33 +34,45 @@ recordRoutes.route("/products").get(function (req, res) {
 recordRoutes.route("/create").post(async (req, res, next) => {
     let shops = require("../index.js")
     let db_connect = dbo.getDb("lets-shop");
-    
-    
 
-    const getFavicon = (url) =>{
-        axios(url)
-        .then(res => {
-            const html = res.data
-            const $ = cheerio.load(html)
-            $('link', html).each(function () {
-                
-                if($(this).attr('rel')==='icon'){
-                   return ($(this).attr('href'))
-                }
-            })
-        })
-    }
-    
-   
+    console.log('sho ayre')
+ 
+    let favicon = ""
+
+
     let shop = {
         url: req.body.url,
         name: req.body.name,
         checked: "false",
         isActive: "false",
-        favicon: getFavicon(req.body.name)
+        favicon: " "
+    }
+  
+   
+
+    const getFavicon = (url) => {
+        axios(url)
+            .then(res => {
+                const html = res.data
+                const $ = cheerio.load(html)
+
+                $('link', html).each(function () {
+                    if ($(this).attr('rel') === 'apple-touch-icon'|| 
+                        $(this).attr('rel') === 'icon' || 
+                            $(this).attr('rel') === 'shortcut icon') {
+                                
+                        shop.favicon = $(this).attr('href')
+                        console.log($(this).attr('href'))
+                    }
+                })
+         
+            }).catch(error => console.log('erroruniqlom'))
     }
 
+  
+
     const checkJSON = async (products_url) => {
+        getFavicon("https://"+shop.name)
         let resp = await axios(products_url)
         if (typeof resp.data !== "object") {
             res.send("incorrect format")
@@ -73,8 +85,8 @@ recordRoutes.route("/create").post(async (req, res, next) => {
                     .insertOne(shop, (err, result) => {
                         if (err) throw err
                     })
-                res.send(shop.name+"Added")
-                shops.new_arrivals(shop.url,shop.name)   
+                res.send(shop.name + "Added")
+                shops.new_arrivals(shop.url, shop.name)
             }
         }
     }

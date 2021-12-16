@@ -3,7 +3,7 @@ import { Box, Flex, Button, Spacer, Image,Text } from "@chakra-ui/react"
 const RadioCard = (props) => {
     return (
         <Flex>
-            <Image boxSize={10} src={props.favicon} />
+            <Image boxSize='60px' src={props.favicon} />
 
             <Box ml={2}>
                 <Text>{props.name.replace("shop.","")}</Text>

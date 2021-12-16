@@ -18,7 +18,7 @@ const { MongoClient } = require("mongodb")
 const client = new MongoClient(process.env.ATLAS_URI);
 
 const dbName = 'lets-shop';
-app.use(express.static(path.join(__dirname, "client", "build")))
+app.use(express.static(path.join(__dirname, "client", "public")))
 
 
 async function run(products) {
@@ -102,7 +102,7 @@ setInterval(()=>{
 },10000 * 60 * 60)
 
 app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname,"./client/build/index.html"));
+    res.sendFile(path.join(__dirname,"./client/public/index.html"));
 });
 
 const port = process.env.PORT || 5001;
