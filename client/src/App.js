@@ -10,9 +10,10 @@ import Settings from './components/Settings';
 import ShopSearch from './components/UI/ShopSearch';
 // import LazyLoad from 'react-lazyload';
 import AddShop from './components/AddShop';
-
+import RadioCard from './components/UI/RadioCard';
 import {
   Box,
+  Button,
   useToast,
   Divider
 } from "@chakra-ui/react"
@@ -22,7 +23,6 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import { GiRss } from 'react-icons/gi';
 
 
 function App() {
@@ -46,10 +46,10 @@ function App() {
     axios.get("https://calm-harbor-25651.herokuapp.com/shops")
       .then(res => {
 
-        if(JSON.parse(localStorage.getItem('localShops')).length === 0){
+        if (JSON.parse(localStorage.getItem('localShops')).length === 0) {
           localStorage.setItem('localShops', JSON.stringify(res.data))
         }
-        setMyShops(JSON.parse(localStorage.getItem('localShops'))||res.data) 
+        setMyShops(JSON.parse(localStorage.getItem('localShops')) || res.data)
 
         // 
       }).catch(err => console.log(`Error: ${err}`));
@@ -92,23 +92,35 @@ function App() {
 
   //add shop to user list
   const toggleShop = (event) => {
-    const index = myShops.findIndex(shop => shop.name === event.target.value);
-    const shopsCopy = [...myShops];
-    shopsCopy[index].checked = !JSON.parse(shopsCopy[index].checked) 
-    shopsCopy[index].isActive = shopsCopy[index].checked
-    setMyShops(shopsCopy)
-    
-    toast({
-      position: "bottom-left",
-      duration: 2000,
-      render: () => (
-        <Box color="white" p={3} bg="blue.500">
-          {shopsCopy[index].checked ? "Subscribed to " + shopsCopy[index].name : "unsubscribed to " + shopsCopy[index].name}
-        </Box>
-      ),
-    })
+
+    setMyShops(myShops =>
+      myShops.map((shop) =>
+        shop.name === event.currentTarget.value
+          ? {
+            ...shop,
+            checked: !JSON.parse(shop.checked),
+            isActive: !JSON.parse(shop.checked)
+          } : shop
+      )
+    )
+
+    // const index = myShops.findIndex(shop => shop.name === event.currentTarget.value);
+    // const shopsCopy = [...myShops];
+    // shopsCopy[index].checked = !JSON.parse(shopsCopy[index].checked) 
+    // shopsCopy[index].isActive = shopsCopy[index].checked
+    // setMyShops(shopsCopy)
+
+    // toast({
+    //   position: "bottom-left",
+    //   duration: 2000,
+    //   render: () => (
+    //     <Box color="white" p={3} bg="blue.500">
+    //       {myShops[index].checked ? "Subscribed to " + myShops[index].name : "unsubscribed to " + shopsCopy[index].name}
+    //     </Box>
+    //   ),
+    // })
   }
-  
+
   //update shop filter on click
   const updateShops = (event) => {
     setLoading(true)
@@ -167,20 +179,30 @@ function App() {
     <SiteButton logo={site.logo} key={index} name={site.name} isActive={site.isActive} filter={updateShops} />
   )
 
+  const allSites = myShops.filter(shop => shop.name.includes(search)).map(shop => {
+    return (
+      <>
+      
+        <RadioCard name={shop.name} value={shop.name} checked={JSON.parse(shop.checked)} toggle={toggleShop} />
+      </>)
+  })
+
   return (
     <div className="App">
       <Router>
         <MenuBar />
+
         <Divider />
         <Routes>
           <Route exact path='/' element={<Feed loading={loading} mySites={mySites} products={products} />} />
           <Route path='/settings' element={<Settings />}>
-            <Route path='shop' element={<ShopSearch search={search} toggle={toggleShop} sites={myShops} searchInput={searchListener} />} />
+            <Route path='shop' element={<ShopSearch search={search} sites={allSites} searchInput={searchListener} />} />
           </Route>
           <Route path='favorites' element={<Feed products={myFavorites} />} />
           <Route path='add' element={<AddShop />} />
         </Routes>
       </Router>
+
     </div>
   );
 }

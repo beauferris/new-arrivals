@@ -4,28 +4,29 @@ import {
     InputGroup,
     InputLeftElement,
     Checkbox,
-    FormLabel
+    FormLabel,
+    Img,
+    Icon,
+    Image,
+    Flex,
+    Divider,
+    useRadioGroup,
+    HStack,
+    Radio,
+    VStack, RadioGroup, SimpleGrid
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
+
+import RadioCard from './RadioCard';
+
+
+
+
 const ShopSearch = (props) => {
-
-    let shops = props.sites;
-
-    const shopLibrary = shops.filter(shop => shop.name.includes(props.search)).map(shop => {
-        return (<Box >
-            <Checkbox
-                type='radio'
-                isChecked={JSON.parse(shop.checked)}
-                onChange={props.toggle}
-                value={shop.name}>{shop.name}</Checkbox>
-        </Box>)
-    })
-
     return (
         <Box className="search">
-             <FormLabel htmlFor='Search'>Search for a Shop</FormLabel>
-            <InputGroup >
-           
+            <FormLabel htmlFor='Search'>Search for a Shop</FormLabel>
+            <InputGroup mb={2}>
                 <InputLeftElement
                     pointerEvents="none"
                     children={<SearchIcon color="gray.300" />}
@@ -36,11 +37,13 @@ const ShopSearch = (props) => {
                     variant="filled"
                     placeholder="Search Shops!"
                     onChange={props.searchInput} />
-            </InputGroup>
-            <Box className='shops'>
-                {shopLibrary}
-            </Box>
+            </InputGroup >
+            <SimpleGrid minChildWidth={'350px'} spacing={5}>
+                {props.sites}
+            </SimpleGrid>           
+
         </Box>
+        
     )
 }
 
