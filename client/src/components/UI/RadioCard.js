@@ -1,13 +1,13 @@
-import { useRadio, Box, Flex, Button, Spacer, Image, Divider, Text, VStack } from "@chakra-ui/react"
+import { Box, Flex, Button, Spacer, Image,Text } from "@chakra-ui/react"
 
 const RadioCard = (props) => {
     return (
         <Flex>
-            <Image boxSize={10} src='./assets/uniqlo.svg' />
+            <Image boxSize={10} src={props.favicon} />
 
             <Box ml={2}>
-                <Text>{props.name}</Text>
-                <Text fontSize={15}>fuck dis</Text>
+                <Text>{props.name.replace("shop.","")}</Text>
+                <Text fontSize={15}>full url</Text>
             </Box>
             <Spacer />
 

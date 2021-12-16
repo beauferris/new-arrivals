@@ -12,8 +12,6 @@ import ShopSearch from './components/UI/ShopSearch';
 import AddShop from './components/AddShop';
 import RadioCard from './components/UI/RadioCard';
 import {
-  Box,
-  Button,
   useToast,
   Divider
 } from "@chakra-ui/react"
@@ -26,7 +24,7 @@ import {
 
 
 function App() {
-  const [shops, setShops] = useState([])
+  
   const [search, setSearch] = useState("")
   const [allProducts, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -183,7 +181,7 @@ function App() {
     return (
       <>
       
-        <RadioCard name={shop.name} value={shop.name} checked={JSON.parse(shop.checked)} toggle={toggleShop} />
+        <RadioCard name={shop.name} value={shop.name} checked={JSON.parse(shop.checked)} toggle={toggleShop} favicon={shop.favicon} />
       </>)
   })
 

@@ -3,22 +3,10 @@ import {
     Box,
     InputGroup,
     InputLeftElement,
-    Checkbox,
     FormLabel,
-    Img,
-    Icon,
-    Image,
-    Flex,
-    Divider,
-    useRadioGroup,
-    HStack,
-    Radio,
-    VStack, RadioGroup, SimpleGrid
+    SimpleGrid
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
-
-import RadioCard from './RadioCard';
-
 
 
 
@@ -38,12 +26,10 @@ const ShopSearch = (props) => {
                     placeholder="Search Shops!"
                     onChange={props.searchInput} />
             </InputGroup >
-            <SimpleGrid minChildWidth={'350px'} spacing={5}>
+            <SimpleGrid minChildWidth={'400px'} spacing={5}>
                 {props.sites}
             </SimpleGrid>           
-
-        </Box>
-        
+        </Box>   
     )
 }
 

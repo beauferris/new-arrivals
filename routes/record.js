@@ -1,6 +1,7 @@
 const express = require("express");
 const recordRoutes = express.Router();
 const dbo = require("../db/conn");
+const cheerio = require('cheerio');
 
 const axios = require("axios")
 
@@ -34,12 +35,37 @@ recordRoutes.route("/create").post(async (req, res, next) => {
     let shops = require("../index.js")
     let db_connect = dbo.getDb("lets-shop");
 
+    let favicon = [];
+
+    const getFavicon = async (url) => {
+        axios(url)
+            .then(res => {
+                const html = res.data
+                const $ = cheerio.load(html)
+
+
+
+                $('link', html).each(function () {
+                    if($(this).attr('red')==='icon'){
+                        favicon.push($(this).attr('href'))
+                    }
+         
+                })
+            }).catch(error => console.log('error'))
+    }
+
+    await getFavicon(req.body.url)
+
+
     let shop = {
         url: req.body.url,
         name: req.body.name,
         checked: "false",
-        isActive: "false"
+        isActive: "false",
+        favicon: favicon[0]
     }
+
+    console.log(shop.favicon)
 
     const checkJSON = async (products_url) => {
         let resp = await axios(products_url)
@@ -47,15 +73,16 @@ recordRoutes.route("/create").post(async (req, res, next) => {
             res.send("incorrect format")
         } else {
             const check = await db_connect.collection("shops").find({ "name": req.body.name }).count(1) >= 1
+            
             if (check) {
                 res.send('store already exists')
             } else {
                 db_connect.collection("shops")
-                    .insertOne(shop, (err, result) => {
+                    .insertOne("fuck", (err, result) => {
                         if (err) throw err
                     })
-                res.send(shop.name+"Added")
-                shops.new_arrivals(shop.url,shop.name)   
+                res.send(shop.name + "Added")
+                shops.new_arrivals(shop.url, shop.name)
 
             }
         }

@@ -48,6 +48,9 @@ async function run(products) {
 }
 
 
+
+
+
 const getShopifyNewArrivals = ((products_url, store) => {
     axios(products_url)
         .then(res => {
@@ -93,7 +96,7 @@ async function shops() {
 
 exports.new_arrivals = getShopifyNewArrivals;
 
-shops()
+// shops()
 
 setInterval(()=>{
     shops()
