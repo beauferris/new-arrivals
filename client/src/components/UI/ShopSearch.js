@@ -26,7 +26,7 @@ const ShopSearch = (props) => {
                     placeholder="Search Shops!"
                     onChange={props.searchInput} />
             </InputGroup >
-            <SimpleGrid minChildWidth={'400px'} spacing={5}>
+            <SimpleGrid minChildWidth={'400px'} spacing={3}>
                 {props.sites}
             </SimpleGrid>           
         </Box>   

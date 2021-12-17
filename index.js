@@ -95,7 +95,7 @@ async function shops() {
 
 exports.new_arrivals = getShopifyNewArrivals;
 
-// shops()
+shops()
 
 setInterval(()=>{
     shops()

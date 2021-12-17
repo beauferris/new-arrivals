@@ -8,7 +8,7 @@ import MenuBar from './components/UI/MenuBar';
 import Feed from './components/Feed';
 import Settings from './components/Settings';
 import ShopSearch from './components/UI/ShopSearch';
-// import LazyLoad from 'react-lazyload';
+import LazyLoad from 'react-lazyload';
 import AddShop from './components/AddShop';
 import RadioCard from './components/UI/RadioCard';
 import {
@@ -24,7 +24,7 @@ import {
 
 
 function App() {
-  
+
   const [search, setSearch] = useState("")
   const [allProducts, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -155,20 +155,20 @@ function App() {
   //return products filtered by active filter
   const products = allProducts.filter(product => active.includes(product.store)).map((product, index) => {
     return (
-      //  <LazyLoad key={index} placeholder={<p>loading...</p>}>
-      <ProductItem
-        key={product.id}
-        loading={loading}
-        toggleFavorite={favoriteItem}
-        store={product.store}
-        url={product.url}
-        img={product.img}
-        brand={product.brand}
-        title={product.title}
-        price={product.price}
-        isFavorite={favorites.find((item) => item.title === product.title)}
-      ></ProductItem>
-      //  </LazyLoad>
+      <LazyLoad key={product.id} >
+        <ProductItem
+          key={product.id}
+          loading={loading}
+          toggleFavorite={favoriteItem}
+          store={product.store}
+          url={product.url}
+          img={product.img}
+          brand={product.brand}
+          title={product.title}
+          price={product.price}
+          isFavorite={favorites.find((item) => item.title === product.title)}
+        ></ProductItem>
+      </LazyLoad>
     )
   })
 
@@ -180,8 +180,8 @@ function App() {
   const allSites = myShops.filter(shop => shop.name.includes(search)).map(shop => {
     return (
       <>
-      
-        <RadioCard name={shop.name} value={shop.name} checked={JSON.parse(shop.checked)} toggle={toggleShop} favicon={shop.favicon} />
+
+        <RadioCard name={shop.name} url={shop.url} value={shop.name} checked={JSON.parse(shop.checked)} toggle={toggleShop} favicon={shop.favicon} />
       </>)
   })
 
