@@ -37,8 +37,6 @@ recordRoutes.route("/create").post(async (req, res, next) => {
 
     console.log('sho ayre')
  
-    let favicon = ""
-
 
     let shop = {
         url: req.body.url,
@@ -60,7 +58,7 @@ recordRoutes.route("/create").post(async (req, res, next) => {
                     if ($(this).attr('rel') === 'apple-touch-icon'|| 
                         $(this).attr('rel') === 'icon' || 
                             $(this).attr('rel') === 'shortcut icon') {
-                                
+
                         shop.favicon = $(this).attr('href')
                         console.log($(this).attr('href'))
                     }
