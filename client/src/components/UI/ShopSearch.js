@@ -4,7 +4,8 @@ import {
     InputGroup,
     InputLeftElement,
     FormLabel,
-    SimpleGrid
+    SimpleGrid,
+    Text
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 
@@ -12,24 +13,26 @@ import { SearchIcon } from '@chakra-ui/icons';
 
 const ShopSearch = (props) => {
     return (
-        <Box className="search">
-            <FormLabel htmlFor='Search'>Search for a Shop</FormLabel>
-            <InputGroup mb={2}>
+        <Box m='3' className="search">
+            <FormLabel htmlFor='Search'>Search</FormLabel>
+            <InputGroup >
                 <InputLeftElement
                     pointerEvents="none"
                     children={<SearchIcon color="gray.300" />}
                 />
                 <Input
-                    mb='1'
+
                     id='search'
                     variant="filled"
                     placeholder="Search Shops!"
                     onChange={props.searchInput} />
+
             </InputGroup >
-            <SimpleGrid minChildWidth={'400px'} spacing={3}>
+            <Text mb={7}>*Check if your favorite shops are in our database</Text>
+            <SimpleGrid minChildWidth={'300px'} spacing={3}>
                 {props.sites}
-            </SimpleGrid>           
-        </Box>   
+            </SimpleGrid>
+        </Box>
     )
 }
 

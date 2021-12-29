@@ -70,9 +70,9 @@ const AddShop = (props) => {
     }
 
     return (
-        <Box m='2'>
+        <Box m='3' >
             <form onSubmit={submitUrl}>
-                <FormLabel htmlFor='url'>Add a shop</FormLabel>
+                <FormLabel htmlFor='url'>Add</FormLabel>
                 <InputGroup>
                     <InputLeftAddon > <ShopifyIcon boxSize={6} /></InputLeftAddon>
                     <Input

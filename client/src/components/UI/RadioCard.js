@@ -20,7 +20,9 @@ const RadioCard = (props) => {
             <Spacer />
 
             <Button
-               
+                h={8}
+                pl={6}
+                pr={6}
                 fontSize={15}
                 onClick={props.toggle}
                 value={props.name}>

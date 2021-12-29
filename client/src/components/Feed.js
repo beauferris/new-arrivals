@@ -16,7 +16,6 @@ const placeholders = [
     }]
 
 const Feed = (props) => {
-
     const skeleton = placeholders.map((product, index) => {
         return (
             <>
@@ -34,13 +33,11 @@ const Feed = (props) => {
     })
 
 
-
-
     const breakpointColumnsObj = {
         default: 4,
-        1200: 3,
-        800: 2,
-        500: 1
+        1600: 3,
+        1100: 2,
+        700: 1
     };
 
     return (

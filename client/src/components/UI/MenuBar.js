@@ -25,7 +25,7 @@ const MenuBar = () => {
                     <IconButton mr='1' icon={<IoIosAdd />} />
                 </Link>
 
-                <Link to='/settings/shop'>
+                <Link to='/shop'>
                     <IconButton icon={<SettingsIcon />} />
                 </Link>
             </Box>

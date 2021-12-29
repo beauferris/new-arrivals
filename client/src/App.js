@@ -31,11 +31,31 @@ function App() {
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('localFavorites')) || [])
   const toast = useToast()
   const [myShops, setMyShops] = useState(JSON.parse(localStorage.getItem('localShops')) || [])
+  const [categories, setCategories] = useState([])
 
   const fetchProducts = () => {
     axios.get("https://calm-harbor-25651.herokuapp.com/products")
       .then(res => {
         setProducts(res.data.sort((a, b) => new Date(b.date) - new Date(a.date)))
+
+        let newCategories = []
+
+        res.data.map(shop => {
+          if (shop.category !== undefined && shop.category !== "") {
+            newCategories.push(shop.category)
+          }
+        })
+
+        let uniqueCategories = [...new Set(newCategories)]
+
+
+        setCategories(uniqueCategories.map(category => {
+          return {
+            category: category,
+            isActive: true
+          }
+        }))
+
         setLoading(false);
       }).catch(err => console.log(`Error: ${err}`));
   }
@@ -48,8 +68,6 @@ function App() {
           localStorage.setItem('localShops', JSON.stringify(res.data))
         }
         setMyShops(JSON.parse(localStorage.getItem('localShops')) || res.data)
-
-        // 
       }).catch(err => console.log(`Error: ${err}`));
   }
 
@@ -66,10 +84,12 @@ function App() {
     fetchShops();
   }, [])
 
+  //Search bar 
   const searchListener = (event) => {
     setSearch(event.target.value)
   }
 
+  //add/remove products from favorites
   const favoriteItem = (event) => {
     const value = event.currentTarget.value;
     const newFavs = [...favorites]
@@ -88,7 +108,7 @@ function App() {
     setFavorites(newFavs)
   }
 
-  //add shop to user list
+  //follow shops
   const toggleShop = (event) => {
 
     setMyShops(myShops =>
@@ -119,21 +139,32 @@ function App() {
     // })
   }
 
-  //update shop filter on click
+  //filter shops
   const updateShops = (event) => {
     setLoading(true)
     const index = myShops.findIndex(site => site.name === event.target.value);
     const filterShopsCopy = [...myShops];
     filterShopsCopy[index].isActive = !JSON.parse(filterShopsCopy[index].isActive);
     setMyShops(filterShopsCopy)
-
   }
 
-  //return active shops
+  const updateCategories = (event) =>{
+    const index = categories.findIndex(category => category.category === event.target.value);
+    const filterCategoriesCopy = [...categories];
+    filterCategoriesCopy[index].isActive = !filterCategoriesCopy[index].isActive;
+    setCategories(filterCategoriesCopy)
+  }
+
+  //return shops user is following
   const active = myShops.filter(site => JSON.parse(site.isActive) === true).map(store => {
     return store.name
   })
 
+  const activeCategories = categories.filter(category => JSON.parse(category.isActive) === true).map(store => {
+    return store.category
+  })
+
+  //return favorites
   const myFavorites = favorites.map((product, index) => {
     return (
       <>
@@ -153,7 +184,9 @@ function App() {
   })
 
   //return products filtered by active filter
-  const products = allProducts.filter(product => active.includes(product.store)).map((product, index) => {
+  const products = allProducts.filter(product => active.includes(product.store))
+    .filter(product=>activeCategories.includes(product.category))
+    .map(product => {
     return (
       <LazyLoad key={product.id} >
         <ProductItem
@@ -172,15 +205,20 @@ function App() {
     )
   })
 
-  //return user picked sites
-  const mySites = myShops.filter(shop => JSON.parse(shop.checked) === true).map((site, index) =>
-    <SiteButton logo={site.logo} key={index} name={site.name} isActive={site.isActive} filter={updateShops} />
-  )
+  // //return user picked sites
+  // const mySites = myShops.filter(shop => JSON.parse(shop.checked) === true).map((site, index) =>
+  //   <SiteButton logo={site.logo} key={index} name={site.name} isActive={site.isActive} filter={updateShops} />
+  // )
+
+  const myCategories = categories.map((category, index) => {
+    return (
+      <SiteButton key={index} value = {category.category} name={category.category} isActive={category.isActive} filter={updateCategories} />
+    )
+  });
 
   const allSites = myShops.filter(shop => shop.name.includes(search)).map(shop => {
     return (
       <>
-
         <RadioCard name={shop.name} url={shop.url} value={shop.name} checked={JSON.parse(shop.checked)} toggle={toggleShop} favicon={shop.favicon} />
       </>)
   })
@@ -189,18 +227,16 @@ function App() {
     <div className="App">
       <Router>
         <MenuBar />
-
         <Divider />
         <Routes>
-          <Route exact path='/' element={<Feed loading={loading} mySites={mySites} products={products} />} />
-          <Route path='/settings' element={<Settings />}>
+          <Route exact path='/' element={<Feed loading={loading} mySites={myCategories} products={products} />} />
+        
             <Route path='shop' element={<ShopSearch search={search} sites={allSites} searchInput={searchListener} />} />
-          </Route>
+         
           <Route path='favorites' element={<Feed products={myFavorites} />} />
           <Route path='add' element={<AddShop />} />
         </Routes>
       </Router>
-
     </div>
   );
 }
