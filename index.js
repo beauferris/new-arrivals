@@ -21,21 +21,21 @@ const dbName = 'lets-shop';
 app.use(express.static(path.join(__dirname, "client", "build")))
 
 const outer = ["Jackets", "Coats", "Coats, Jackets and Vests",
-    "Mens Long Sleeve Jacket", "outer", "Outer", "Outerwear","Jacket"]
+    "Mens Long Sleeve Jacket", "outer", "Outer", "Outerwear", "Jacket"]
 
-const tops = ["Clothing","Tops - Short Sleeve T-Shirts", "Sweatshirts", "Tees", "t-shirt", "hoodie", "sweater", "vest", "cardigan", "Tees and Sweats", "Mens Short Sleeve T-Shirt",
+const tops = ["Clothing", "Tops - Short Sleeve T-Shirts", "Sweatshirts", "Tees", "t-shirt", "hoodie", "sweater", "vest", "cardigan", "Tees and Sweats", "Mens Short Sleeve T-Shirt",
     "Mens Long Sleeve Sweatshirt", "Mens Long Sleeve T-Shirt", "tops", "Tops - Crewnecks", "Tops - Long Sleeve T-Shirts", "Tops - Hoodies", "Tops - Sweaters",
-    "Tops - Long Sleeve Button Downs", "Tops","Knitwear",
-    "Mens Long Sleeve Polo/Rugby", "Shirts", "Sweaters", "T-Shirts", "T-shirts", "Knits", "Shirt", "Mens Short Sleeve Knit","Fleece"]
+    "Tops - Long Sleeve Button Downs", "Tops", "Knitwear",
+    "Mens Long Sleeve Polo/Rugby", "Shirts", "Sweaters", "T-Shirts", "T-shirts", "Knits", "Shirt", "Mens Short Sleeve Knit", "Fleece"]
 
 const bottoms = ["Pant", "Sweatpants", "Denim Jeans", "Trousers", "Bottoms", "Bottoms - Denim", "Bottoms - Joggers and Sweatpants", "bottoms", "Mens Pant", "Denim", "Pants", "pant",]
-const footwear = ["Footwear - Sneakers","Sneakers","Footwear","Shoes and Boots"]
-const accessories = ["Hats","Hat","Bags","Accessories","Headwear","Accessories - Bags - Duffles","Accessories - Bags - Totes","Accessories - Bags - Backpacks","Accessories - Headwear - Beanies","Accessories - Headwear - Caps",
-"Accessories Beanie", "Mens Brief", "other","Misc.","food", "hat","Gift Cards",]
+const footwear = ["Footwear - Sneakers", "Sneakers", "Footwear", "Shoes and Boots"]
+const accessories = ["Hats", "Hat", "Bags", "Accessories", "Headwear", "Accessories - Bags - Duffles", "Accessories - Bags - Totes", "Accessories - Bags - Backpacks", "Accessories - Headwear - Beanies", "Accessories - Headwear - Caps",
+    "Accessories Beanie", "Mens Brief", "other", "Misc.", "food", "hat", "Gift Cards",]
 
-const home = ["Accessories Novelty Home","kitchen","incense","ceramic","Candle","Bath Bomb","Hand Sanitizer","Gift Set", "Bubble Bath","Body Lotion","Bar Soap","Hand Cream"]
+const home = ["Accessories Novelty Home", "kitchen", "incense", "ceramic", "Candle", "Bath Bomb", "Hand Sanitizer", "Gift Set", "Bubble Bath", "Body Lotion", "Bar Soap", "Hand Cream"]
 
-const dresses = ["Dresses","dress","Dress","dresses","skirt"]
+const dresses = ["Dresses", "dress", "Dress", "dresses", "skirt"]
 
 
 async function run(products) {
@@ -74,27 +74,26 @@ const getShopifyNewArrivals = ((products_url, store) => {
 
             let category = "";
 
-
-         
             let products = []
-            json.map((item) => {
-               if(outer.includes(item.product_type)){
-                   category = "outer"
-               }else if(tops.includes(item.product_type)){
-                   category = "tops"
-               }else if(bottoms.includes(item.product_type)){
-                   category = "bottoms"
-               }else if (footwear.includes(item.product_type)){
-                   category = "footwear"
-               }else if(accessories.includes(item.product_type)){
-                category = "accessories"
-               }else if(home.includes(item.product_type)){
-                category = "home"
-               }else if(dresses.includes(item.product_type)){
-                category = "dresses"
-               }else {
-                   category = item.product_type
-               }
+            json.forEach((item) => {
+                if (outer.includes(item.product_type)) {
+                    category = "outer"
+                } else if (tops.includes(item.product_type)) {
+                    category = "tops"
+                } else if (bottoms.includes(item.product_type)) {
+                    category = "bottoms"
+                } else if (footwear.includes(item.product_type)) {
+                    category = "footwear"
+                } else if (accessories.includes(item.product_type)) {
+                    category = "accessories"
+                } else if (home.includes(item.product_type)) {
+                    category = "home"
+                } else if (dresses.includes(item.product_type)) {
+                    category = "dresses"
+                } else {
+                    console.log(item.product_type)
+                    category = "Misc"
+                }
 
                 const product = {
                     id: item.variants[0].id,

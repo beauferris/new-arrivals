@@ -6,7 +6,6 @@ import ProductItem from './components/ProductItem';
 import SiteButton from './components/SiteButton';
 import MenuBar from './components/UI/MenuBar';
 import Feed from './components/Feed';
-import Settings from './components/Settings';
 import ShopSearch from './components/UI/ShopSearch';
 import LazyLoad from 'react-lazyload';
 import AddShop from './components/AddShop';
@@ -22,7 +21,7 @@ import {
   Route,
 } from "react-router-dom";
 
-const allCategories = ["All", "tops", "outer", "accessories", "footwear", "bottoms", "dresses", "home", "Print"]
+const allCategories = ["All","tops", "outer", "accessories", "footwear", "bottoms", "dresses", "home", "Misc"]
 
 function App() {
 
@@ -33,7 +32,6 @@ function App() {
   const toast = useToast()
   const [myShops, setMyShops] = useState(JSON.parse(localStorage.getItem('localShops')) || [])
   const [categories, setCategories] = useState([])
-  const [userProducts, setUserProducts] = useState([])
 
   const fetchProducts = () => {
     axios.get("https://calm-harbor-25651.herokuapp.com/products")
