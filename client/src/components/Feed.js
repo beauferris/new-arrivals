@@ -36,8 +36,8 @@ const Feed = (props) => {
     const breakpointColumnsObj = {
         default: 4,
         1600: 3,
-        1100: 2,
-        700: 1
+        1000: 2,
+        600: 1
     };
 
     return (

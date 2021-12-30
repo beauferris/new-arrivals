@@ -22,6 +22,7 @@ import {
   Route,
 } from "react-router-dom";
 
+const allCategories = ["All", "tops", "outer", "accessories", "footwear", "bottoms", "dresses", "home", "Print"]
 
 function App() {
 
@@ -32,31 +33,27 @@ function App() {
   const toast = useToast()
   const [myShops, setMyShops] = useState(JSON.parse(localStorage.getItem('localShops')) || [])
   const [categories, setCategories] = useState([])
+  const [userProducts, setUserProducts] = useState([])
 
   const fetchProducts = () => {
     axios.get("https://calm-harbor-25651.herokuapp.com/products")
       .then(res => {
+
         setProducts(res.data.sort((a, b) => new Date(b.date) - new Date(a.date)))
 
-        let newCategories = []
-
-        res.data.map(shop => {
-          if (shop.category !== undefined && shop.category !== "") {
-            newCategories.push(shop.category)
-          }
-        })
-
-        let uniqueCategories = [...new Set(newCategories)]
-
-
-        setCategories(uniqueCategories.map(category => {
-          return {
-            category: category,
-            isActive: true
-          }
-        }))
-
         setLoading(false);
+
+        // let newCategories = []
+        // res.data.map(shop => {
+        //   if (shop.category !== undefined && shop.category !== "") {
+        //     newCategories.push(shop.category)
+        //   }
+        // })
+
+        // let uniqueCategories = [...new Set(newCategories)]
+
+
+
       }).catch(err => console.log(`Error: ${err}`));
   }
 
@@ -68,21 +65,34 @@ function App() {
           localStorage.setItem('localShops', JSON.stringify(res.data))
         }
         setMyShops(JSON.parse(localStorage.getItem('localShops')) || res.data)
+
       }).catch(err => console.log(`Error: ${err}`));
   }
 
-  useEffect(() => {
-    localStorage.setItem('localShops', JSON.stringify(myShops))
-    localStorage.setItem('localFavorites', JSON.stringify(favorites))
-  }, [favorites, myShops])
 
-  useEffect(() => {
-    fetchProducts();
-  }, [myShops])
 
   useEffect(() => {
     fetchShops();
   }, [])
+
+  useEffect(() => {
+    localStorage.setItem('localShops', JSON.stringify(myShops))
+    localStorage.setItem('localFavorites', JSON.stringify(favorites))
+    setCategories(allCategories.map(category => {
+      return {
+        category: category,
+        isActive: true
+      }
+    }))
+  }, [favorites, myShops])
+
+  const activeCategories = categories.filter(category => JSON.parse(category.isActive) === true).map(store => {
+    return store.category
+  })
+
+  useEffect(() => {
+    fetchProducts();
+  }, [myShops, categories])
 
   //Search bar 
   const searchListener = (event) => {
@@ -148,20 +158,39 @@ function App() {
     setMyShops(filterShopsCopy)
   }
 
-  const updateCategories = (event) =>{
+  const updateCategories = async (event) => {
+    setLoading(true)
+
     const index = categories.findIndex(category => category.category === event.target.value);
     const filterCategoriesCopy = [...categories];
-    filterCategoriesCopy[index].isActive = !filterCategoriesCopy[index].isActive;
+
+    if (filterCategoriesCopy[index].category === 'All') {
+      if (!filterCategoriesCopy[index].isActive) {
+        filterCategoriesCopy.map(category => {
+          category.isActive = true
+        })
+      } else {
+        filterCategoriesCopy.map(category => {
+          category.isActive = false;
+        })
+      }
+    } else {
+      filterCategoriesCopy[0].isActive = false
+      filterCategoriesCopy[index].isActive = !filterCategoriesCopy[index].isActive;
+      
+    }
     setCategories(filterCategoriesCopy)
   }
+
+  const myCategories = categories.map((category, index) => {
+    return (
+      <SiteButton key={index} value={category.category} name={category.category} isActive={category.isActive} filter={updateCategories} />
+    )
+  });
 
   //return shops user is following
   const active = myShops.filter(site => JSON.parse(site.isActive) === true).map(store => {
     return store.name
-  })
-
-  const activeCategories = categories.filter(category => JSON.parse(category.isActive) === true).map(store => {
-    return store.category
   })
 
   //return favorites
@@ -185,10 +214,10 @@ function App() {
 
   //return products filtered by active filter
   const products = allProducts.filter(product => active.includes(product.store))
-    .filter(product=>activeCategories.includes(product.category))
+    .filter(product => activeCategories.includes(product.category))
     .map(product => {
-    return (
-      <LazyLoad key={product.id} >
+      return (
+        // <LazyLoad key={product.id} >
         <ProductItem
           key={product.id}
           loading={loading}
@@ -201,20 +230,16 @@ function App() {
           price={product.price}
           isFavorite={favorites.find((item) => item.title === product.title)}
         ></ProductItem>
-      </LazyLoad>
-    )
-  })
+        // </LazyLoad>
+      )
+    })
+
 
   // //return user picked sites
   // const mySites = myShops.filter(shop => JSON.parse(shop.checked) === true).map((site, index) =>
   //   <SiteButton logo={site.logo} key={index} name={site.name} isActive={site.isActive} filter={updateShops} />
   // )
 
-  const myCategories = categories.map((category, index) => {
-    return (
-      <SiteButton key={index} value = {category.category} name={category.category} isActive={category.isActive} filter={updateCategories} />
-    )
-  });
 
   const allSites = myShops.filter(shop => shop.name.includes(search)).map(shop => {
     return (
@@ -230,9 +255,7 @@ function App() {
         <Divider />
         <Routes>
           <Route exact path='/' element={<Feed loading={loading} mySites={myCategories} products={products} />} />
-        
-            <Route path='shop' element={<ShopSearch search={search} sites={allSites} searchInput={searchListener} />} />
-         
+          <Route path='shop' element={<ShopSearch search={search} sites={allSites} searchInput={searchListener} />} />
           <Route path='favorites' element={<Feed products={myFavorites} />} />
           <Route path='add' element={<AddShop />} />
         </Routes>

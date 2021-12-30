@@ -15,7 +15,7 @@ const ShopSearch = (props) => {
     return (
         <Box m='3' className="search">
             <FormLabel htmlFor='Search'>Search</FormLabel>
-            <InputGroup >
+            <InputGroup mb='6'>
                 <InputLeftElement
                     pointerEvents="none"
                     children={<SearchIcon color="gray.300" />}
@@ -28,7 +28,6 @@ const ShopSearch = (props) => {
                     onChange={props.searchInput} />
 
             </InputGroup >
-            <Text mb={7}>*Check if your favorite shops are in our database</Text>
             <SimpleGrid minChildWidth={'300px'} spacing={3}>
                 {props.sites}
             </SimpleGrid>
