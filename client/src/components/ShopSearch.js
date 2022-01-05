@@ -5,7 +5,6 @@ import {
     InputLeftElement,
     FormLabel,
     SimpleGrid,
-    Text
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 

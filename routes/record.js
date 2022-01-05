@@ -46,7 +46,6 @@ recordRoutes.route("/create").post(async (req, res, next) => {
         favicon: " "
     }
   
-   
 
     const getFavicon = (url) => {
         axios(url)
@@ -67,7 +66,6 @@ recordRoutes.route("/create").post(async (req, res, next) => {
             }).catch(error => console.log('erroruniqlom'))
     }
 
-  
 
     const checkJSON = async (products_url) => {
         getFavicon("https://"+shop.name)

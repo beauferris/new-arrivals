@@ -3,10 +3,10 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProductItem from './components/ProductItem';
-import SiteButton from './components/SiteButton';
+import SiteButton from './components/UI/FilterButton';
 import MenuBar from './components/UI/MenuBar';
 import Feed from './components/Feed';
-import ShopSearch from './components/UI/ShopSearch';
+import ShopSearch from './components/ShopSearch';
 import LazyLoad from 'react-lazyload';
 import AddShop from './components/AddShop';
 import RadioCard from './components/UI/RadioCard';
@@ -36,38 +36,27 @@ function App() {
   const fetchProducts = () => {
     axios.get("https://calm-harbor-25651.herokuapp.com/products")
       .then(res => {
-
         setProducts(res.data.sort((a, b) => new Date(b.date) - new Date(a.date)))
-
         setLoading(false);
-
         // let newCategories = []
         // res.data.map(shop => {
         //   if (shop.category !== undefined && shop.category !== "") {
         //     newCategories.push(shop.category)
         //   }
         // })
-
         // let uniqueCategories = [...new Set(newCategories)]
-
-
-
       }).catch(err => console.log(`Error: ${err}`));
   }
 
   const fetchShops = () => {
     axios.get("https://calm-harbor-25651.herokuapp.com/shops")
       .then(res => {
-
         if (JSON.parse(localStorage.getItem('localShops')).length === 0) {
           localStorage.setItem('localShops', JSON.stringify(res.data))
         }
         setMyShops(JSON.parse(localStorage.getItem('localShops')) || res.data)
-
       }).catch(err => console.log(`Error: ${err}`));
   }
-
-
 
   useEffect(() => {
     fetchShops();
@@ -84,9 +73,6 @@ function App() {
     }))
   }, [favorites, myShops])
 
-  const activeCategories = categories.filter(category => JSON.parse(category.isActive) === true).map(store => {
-    return store.category
-  })
 
   useEffect(() => {
     fetchProducts();
@@ -147,14 +133,14 @@ function App() {
     // })
   }
 
-  //filter shops
-  const updateShops = (event) => {
-    setLoading(true)
-    const index = myShops.findIndex(site => site.name === event.target.value);
-    const filterShopsCopy = [...myShops];
-    filterShopsCopy[index].isActive = !JSON.parse(filterShopsCopy[index].isActive);
-    setMyShops(filterShopsCopy)
-  }
+  // //filter shops
+  // const updateShops = (event) => {
+  //   setLoading(true)
+  //   const index = myShops.findIndex(site => site.name === event.target.value);
+  //   const filterShopsCopy = [...myShops];
+  //   filterShopsCopy[index].isActive = !JSON.parse(filterShopsCopy[index].isActive);
+  //   setMyShops(filterShopsCopy)
+  // }
 
   const updateCategories = async (event) => {
     setLoading(true)
@@ -191,6 +177,10 @@ function App() {
     return store.name
   })
 
+
+  const activeCategories = categories.filter(category => JSON.parse(category.isActive) === true).map(store => {
+    return store.category
+  })
   //return favorites
   const myFavorites = favorites.map((product, index) => {
     return (
@@ -206,6 +196,7 @@ function App() {
           title={product.title}
           price={product.price}
           isFavorite={favorites.find((item) => item.title === product.title)}
+          icon={myShops.find((shop) => shop.name === product.store)}
         ></ProductItem>
       </>)
   })
@@ -215,7 +206,7 @@ function App() {
     .filter(product => activeCategories.includes(product.category))
     .map(product => {
       return (
-        // <LazyLoad key={product.id} >
+       <LazyLoad key={product.id} >
         <ProductItem
           key={product.id}
           loading={loading}
@@ -227,8 +218,9 @@ function App() {
           title={product.title}
           price={product.price}
           isFavorite={favorites.find((item) => item.title === product.title)}
+          icon={myShops.find((shop) => shop.name === product.store)}
         ></ProductItem>
-        // </LazyLoad>
+        </LazyLoad>
       )
     })
 

@@ -32,8 +32,6 @@ const AddShop = (props) => {
     const submitUrl = (event) => {
         event.preventDefault()
 
-
-
         try {
             let shopURL = new URL(shop)
 
