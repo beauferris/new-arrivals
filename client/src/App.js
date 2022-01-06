@@ -23,7 +23,7 @@ import {
   Route,
 } from "react-router-dom";
 
-const allCategories = ["All","tops", "outer", "accessories", "footwear", "bottoms", "dresses", "home", "Misc"]
+const allCategories = ["All", "tops", "outer", "accessories", "footwear", "bottoms", "dresses", "home", "Misc"]
 
 function App() {
   const { logout, user, isAuthenticated } = useAuth0();
@@ -34,15 +34,16 @@ function App() {
   const toast = useToast()
   const [myShops, setMyShops] = useState(JSON.parse(localStorage.getItem('localShops')) || [])
   const [categories, setCategories] = useState([])
-  
+
   // const [userData, setUserData]= useState(isAuthenticated?[{
   //   name: user.name,
   // }]: [])
 
 
-  const fetchUser = async () =>{
-    let userData = await axios.get("https://calm-harbor-25651.herokuapp.com/user",{params: {name: user.name}})
+  const fetchUser = async () => {
+    let userData = isAuthenticated? await axios.get("https://calm-harbor-25651.herokuapp.com/user", { params: { name: user.name } }) : ""
     console.log(userData)
+    console.log("hello")
   }
 
   const fetchProducts = () => {
@@ -71,7 +72,10 @@ function App() {
   }
 
   useEffect(() => {
-    if(isAuthenticated){fetchUser()} 
+
+    fetchUser()
+
+
   }, [])
 
   useEffect(() => {
@@ -177,7 +181,7 @@ function App() {
     } else {
       filterCategoriesCopy[0].isActive = false
       filterCategoriesCopy[index].isActive = !filterCategoriesCopy[index].isActive;
-      
+
     }
     setCategories(filterCategoriesCopy)
   }
@@ -222,20 +226,20 @@ function App() {
     .filter(product => activeCategories.includes(product.category))
     .map(product => {
       return (
-       <LazyLoad key={product.id} >
-        <ProductItem
-          key={product.id}
-          loading={loading}
-          toggleFavorite={favoriteItem}
-          store={product.store}
-          url={product.url}
-          img={product.img}
-          brand={product.brand}
-          title={product.title}
-          price={product.price}
-          isFavorite={favorites.find((item) => item.title === product.title)}
-          icon={myShops.find((shop) => shop.name === product.store)}
-        ></ProductItem>
+        <LazyLoad key={product.id} >
+          <ProductItem
+            key={product.id}
+            loading={loading}
+            toggleFavorite={favoriteItem}
+            store={product.store}
+            url={product.url}
+            img={product.img}
+            brand={product.brand}
+            title={product.title}
+            price={product.price}
+            isFavorite={favorites.find((item) => item.title === product.title)}
+            icon={myShops.find((shop) => shop.name === product.store)}
+          ></ProductItem>
         </LazyLoad>
       )
     })
