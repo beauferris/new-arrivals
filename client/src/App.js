@@ -15,6 +15,8 @@ import {
   Divider
 } from "@chakra-ui/react"
 
+import { useAuth0 } from "@auth0/auth0-react";
+
 import {
   HashRouter as Router,
   Routes,
@@ -24,7 +26,7 @@ import {
 const allCategories = ["All","tops", "outer", "accessories", "footwear", "bottoms", "dresses", "home", "Misc"]
 
 function App() {
-
+  const { logout, user, isAuthenticated } = useAuth0();
   const [search, setSearch] = useState("")
   const [allProducts, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -32,6 +34,16 @@ function App() {
   const toast = useToast()
   const [myShops, setMyShops] = useState(JSON.parse(localStorage.getItem('localShops')) || [])
   const [categories, setCategories] = useState([])
+  
+  // const [userData, setUserData]= useState(isAuthenticated?[{
+  //   name: user.name,
+  // }]: [])
+
+
+  const fetchUser = async () =>{
+    let userData = await axios.get("https://calm-harbor-25651.herokuapp.com/user",{params: {name: user.name}})
+    console.log(userData)
+  }
 
   const fetchProducts = () => {
     axios.get("https://calm-harbor-25651.herokuapp.com/products")
@@ -57,6 +69,10 @@ function App() {
         setMyShops(JSON.parse(localStorage.getItem('localShops')) || res.data)
       }).catch(err => console.log(`Error: ${err}`));
   }
+
+  useEffect(() => {
+    if(isAuthenticated){fetchUser()} 
+  }, [])
 
   useEffect(() => {
     fetchShops();
@@ -223,7 +239,6 @@ function App() {
         </LazyLoad>
       )
     })
-
 
   // //return user picked sites
   // const mySites = myShops.filter(shop => JSON.parse(shop.checked) === true).map((site, index) =>

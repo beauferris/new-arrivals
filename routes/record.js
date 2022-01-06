@@ -31,6 +31,20 @@ recordRoutes.route("/products").get(function (req, res) {
         });
 });
 
+recordRoutes.route("/user").get(function (req, res) {
+    let db_connect = dbo.getDb("lets-shop");
+    
+    let user = req.query.name;
+    console.log(user)
+    db_connect
+        .collection("users")
+        .findOne({name:user})
+        .toArray(function (err, result) {
+            if (err) throw err;
+            res.json(result);
+        });
+});
+
 recordRoutes.route("/create").post(async (req, res, next) => {
     let shops = require("../index.js")
     let db_connect = dbo.getDb("lets-shop");

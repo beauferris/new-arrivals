@@ -21,21 +21,27 @@ const dbName = 'lets-shop';
 app.use(express.static(path.join(__dirname, "client", "build")))
 
 const outer = ["Jackets", "Coats", "Coats, Jackets and Vests",
-    "Mens Long Sleeve Jacket", "outer", "Outer", "Outerwear", "Jacket"]
+    "Mens Long Sleeve Jacket", "outer", "Outer", "Outerwear", "Jacket", "Outerwear - Jackets","Outerwear Mens"]
 
-const tops = ["Clothing", "Tops - Short Sleeve T-Shirts", "Sweatshirts", "Tees", "t-shirt", "hoodie", "sweater", "vest", "cardigan", "Tees and Sweats", "Mens Short Sleeve T-Shirt",
+const tops = ["Apparel","Sweatshirt", "Tee Shirt", "shirt", "Vests","T-Shirts Mens",
+    "MENS HOODIE",
+    "Clothing", "Tops - Short Sleeve T-Shirts", "T SHIRT",
+    "Sweatshirts", "Tees", "t-shirt", "hoodie", "sweater", "vest", "cardigan", "Tees and Sweats", "Mens Short Sleeve T-Shirt",
     "Mens Long Sleeve Sweatshirt", "Mens Long Sleeve T-Shirt", "tops", "Tops - Crewnecks", "Tops - Long Sleeve T-Shirts", "Tops - Hoodies", "Tops - Sweaters",
     "Tops - Long Sleeve Button Downs", "Tops", "Knitwear",
     "Mens Long Sleeve Polo/Rugby", "Shirts", "Sweaters", "T-Shirts", "T-shirts", "Knits", "Shirt", "Mens Short Sleeve Knit", "Fleece"]
 
-const bottoms = ["Pant", "Sweatpants", "Denim Jeans", "Trousers", "Bottoms", "Bottoms - Denim", "Bottoms - Joggers and Sweatpants", "bottoms", "Mens Pant", "Denim", "Pants", "pant",]
-const footwear = ["Footwear - Sneakers", "Sneakers", "Footwear", "Shoes and Boots"]
-const accessories = ["Hats", "Hat", "Bags", "Accessories", "Headwear", "Accessories - Bags - Duffles", "Accessories - Bags - Totes", "Accessories - Bags - Backpacks", "Accessories - Headwear - Beanies", "Accessories - Headwear - Caps",
+const bottoms = ["Pants Mens", "Bottoms - Chinos", "Pant", "Sweatpants", "Denim Jeans", "Trousers", "Bottoms", "Bottoms - Denim", "Bottoms - Joggers and Sweatpants", "bottoms", "Mens Pant", "Denim", "Pants", "pant",]
+ const footwear = ["Footwear - Sneakers", "Sneakers", "Footwear", "Shoes and Boots","Lace Ups Mens"]
+const accessories = ["Jewelry Mens","Gloves Mens",
+    "Accessories - Wallets and Keychains", "Deodorant", "Hats", "Hat", "Bags", "Accessories", "Headwear", "Accessories - Bags - Duffles", "Accessories - Bags - Totes", "Accessories - Bags - Backpacks", "Accessories - Headwear - Beanies", "Accessories - Headwear - Caps",
     "Accessories Beanie", "Mens Brief", "other", "Misc.", "food", "hat", "Gift Cards",]
 
-const home = ["Accessories Novelty Home", "kitchen", "incense", "ceramic", "Candle", "Bath Bomb", "Hand Sanitizer", "Gift Set", "Bubble Bath", "Body Lotion", "Bar Soap", "Hand Cream"]
+const home = ["Tarps","Tarps","Cups & Mugs","Chairs","Poles & Accessories","Containers & Coolers","Iron Grill Table","Tents","Tables","Candles", "Lifestyle - Homeware - Blankets", "Accessories Novelty Home", "Apothecary", "kitchen", "incense", "ceramic", "Candle", "Bath Bomb", "Hand Sanitizer", "Gift Set", "Bubble Bath", "Body Lotion", "Bar Soap", "Hand Cream"]
 
 const dresses = ["Dresses", "dress", "Dress", "dresses", "skirt"]
+
+const jewelry = ["rings","necklace","ring","necklaces"]
 
 
 async function run(products) {
@@ -88,7 +94,7 @@ const getShopifyNewArrivals = ((products_url, store) => {
                     category = "accessories"
                 } else if (home.includes(item.product_type)) {
                     category = "home"
-                } else if (dresses.includes(item.product_type)) {
+                } else if (dresses.includes(item.product_type.toLowerCase())) {
                     category = "dresses"
                 } else {
                     console.log(item.product_type)
@@ -104,7 +110,8 @@ const getShopifyNewArrivals = ((products_url, store) => {
                     store: store,
                     brand: item.vendor,
                     date: Date.now(),
-                    category: category
+                    category: category,
+                    tag: item.product_type
                 }
                 products.push(product)
             })

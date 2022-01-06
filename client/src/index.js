@@ -6,14 +6,22 @@ import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from "@chakra-ui/react"
 import { ColorModeScript } from "@chakra-ui/react"
 import theme from "./theme"
+import {Auth0Provider} from "@auth0/auth0-react"
+
 
 ReactDOM.render(
+  <Auth0Provider
+    
+    domain='dev-wtn7hxuj.us.auth0.com'
+    clientId='5FkDWQUeysnhLGU0rpXWmMiBxDWsa9da'
+    redirectUri={window.location.origin}>
   <React.StrictMode>
     <ChakraProvider>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <App />
     </ChakraProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
+  </Auth0Provider>,
   document.getElementById('root')
 
 );

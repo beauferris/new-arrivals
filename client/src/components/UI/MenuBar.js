@@ -1,19 +1,27 @@
 //IoMdMoon, IoMdSunny
 import './MenuBar.css';
-import { Box, IconButton} from "@chakra-ui/react"
+import { Box, Flex, IconButton, Spacer} from "@chakra-ui/react"
 import { IoIosHeart, IoIosAdd} from 'react-icons/io'
 import { GiHanger } from 'react-icons/gi'
 import { SettingsIcon } from '@chakra-ui/icons';
 import { Link } from "react-router-dom";
+import LoginButton from '../login/LoginButton';
+import LogoutButton from '../login/LogoutButton';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const MenuBar = () => {
+    const {isAuthenticated} = useAuth0();
+
     return (
-        <Box
+        <Flex  m='1'
             bgColor="rgb(249, 249, 249,0.85)"
             className='menu-bar'>
-            <Link className='logo' to='/'>
-                <IconButton icon={<GiHanger />} /> </Link>
-            <Box >
+            <Link  className='logo' to='/'>
+                <IconButton mr='1' icon={<GiHanger />} /> </Link>
+            {isAuthenticated? <LogoutButton/> :    <LoginButton/>}
+          
+            <Spacer/>
+            <Box>
                 {/* <IconButton  onClick={toggleColorMode}
                     icon={colorMode === "light" ? <IoMdMoon /> : <IoMdSunny />} /> */}
 
@@ -29,7 +37,7 @@ const MenuBar = () => {
                     <IconButton icon={<SettingsIcon />} />
                 </Link>
             </Box>
-        </Box>
+        </Flex>
     )
 }
 

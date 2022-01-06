@@ -34,7 +34,7 @@ const ProductItem = (props) => {
                 </Link> </Skeleton>
 
 
-            <Grid templateColumns="40px 1fr 60px ">
+            <Grid templateColumns="40px 1fr auto ">
                 
                 <Skeleton speed='2' isLoaded={!props.loading} >
                     <GridItem  >
@@ -42,21 +42,20 @@ const ProductItem = (props) => {
                     </GridItem>
                 </Skeleton>
 
-                <SkeletonText speed='2' ml='2' mb='2' isLoaded={!props.loading} >
+                <SkeletonText speed='2' ml='1' mr='1' mb='2' isLoaded={!props.loading} >
                     <Heading colSpan={1} m='0' p='0' fontSize='md'>{props.brand}</Heading>
                     <Text fontSize='m'>{props.title ?? 'sampletext'}</Text>
                 </SkeletonText>
 
                 <GridItem >
-                    <Skeleton speed='2' ml='1' isLoaded={!props.loading}>
-                        <IconButton
+                    <Skeleton speed='2' isLoaded={!props.loading}>
+                        <IconButton m='0'
                             value={props.title}
                             onClick={props.toggleFavorite}
                             icon={favorited ? <IoIosHeart style={{ color: 'red' }} /> : <IoIosHeartEmpty style={{ color: 'red' }} />}
                         /></Skeleton></GridItem>
             </Grid>
         </Box>
-
     )
 }
 
