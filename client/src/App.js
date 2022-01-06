@@ -41,9 +41,12 @@ function App() {
 
 
   const fetchUser = async () => {
-    let userData = isAuthenticated? await axios.get("https://calm-harbor-25651.herokuapp.com/user", { params: { name: user.name } }) : ""
-    console.log(userData)
-    console.log("hello")
+    try {
+      let userData = await axios.get("https://calm-harbor-25651.herokuapp.com/user")
+      console.log(userData)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const fetchProducts = () => {

@@ -31,18 +31,19 @@ recordRoutes.route("/products").get(function (req, res) {
         });
 });
 
-recordRoutes.route("/user").get(function (req, res) {
+recordRoutes.route("/user").get( function (req, res) {
     let db_connect = dbo.getDb("lets-shop");
     
-    let user = req.query.name;
-    console.log(user)
-    db_connect
+    // let user = req.query.name;
+    // console.log(req.query.name)
+
+db_connect
         .collection("users")
-        .findOne({name:user})
-        .toArray(function (err, result) {
+        .findOne({name:'Hamzey Beauferris'},(err, user)=>{
             if (err) throw err;
-            res.json(result);
-        });
+            res.json(user)
+        } );
+        
 });
 
 recordRoutes.route("/create").post(async (req, res, next) => {
@@ -50,7 +51,6 @@ recordRoutes.route("/create").post(async (req, res, next) => {
     let db_connect = dbo.getDb("lets-shop");
 
     console.log('sho ayre')
- 
 
     let shop = {
         url: req.body.url,

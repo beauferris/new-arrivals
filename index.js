@@ -18,7 +18,8 @@ const { MongoClient } = require("mongodb")
 const client = new MongoClient(process.env.ATLAS_URI);
 
 const dbName = 'lets-shop';
-app.use(express.static(path.join(__dirname, "client", "build")))
+// app.use(express.static(path.join(__dirname, "client", "build")))
+app.use(express.static(path.join(__dirname, "client")))
 
 const outer = ["Jackets", "Coats", "Coats, Jackets and Vests",
     "Mens Long Sleeve Jacket", "outer", "Outer", "Outerwear", "Jacket", "Outerwear - Jackets","Outerwear Mens"]
@@ -47,7 +48,7 @@ const jewelry = ["rings","necklace","ring","necklaces"]
 async function run(products) {
     try {
         await client.connect();
-        console.log("connected");
+        //console.log("connected");
         const db = client.db(dbName);
         const col = db.collection("products");
         let myProducts = products
@@ -56,7 +57,7 @@ async function run(products) {
 
             if (check) {
                 //col.deleteMany({"title":product.title});
-                console.log('exists')
+                //console.log('exists')
             } else {
                 const p = await col.insertOne(product);
                 const myDoc = await col.findOne();
@@ -97,7 +98,7 @@ const getShopifyNewArrivals = ((products_url, store) => {
                 } else if (dresses.includes(item.product_type.toLowerCase())) {
                     category = "dresses"
                 } else {
-                    console.log(item.product_type)
+                    //console.log(item.product_type)
                     category = "Misc"
                 }
 
@@ -124,12 +125,12 @@ const getShopifyNewArrivals = ((products_url, store) => {
 async function shops() {
     try {
         await client.connect();
-        console.log("Getting shops");
+        //console.log("Getting shops");
         const db = client.db(dbName);
         const col = db.collection("shops");
 
         col.find().forEach(shop => {
-            console.log(shop.url)
+            //console.log(shop.url)
             getShopifyNewArrivals(shop.url, shop.name);
         })
     } catch (err) {
@@ -147,7 +148,7 @@ setInterval(() => {
 }, 10000 * 60 * 60)
 
 app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "./client/build/index.html"));
+    res.sendFile(path.join(__dirname, "./client/index.html"));
 });
 
 const port = process.env.PORT || 5001;
