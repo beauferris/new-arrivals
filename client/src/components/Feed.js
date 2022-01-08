@@ -1,7 +1,7 @@
-import {
-    Box
+// import {
+//     Box
 
-} from '@chakra-ui/react';
+// } from '@chakra-ui/react';
 import './Feed.css';
 import ProductItem from './ProductItem';
 
@@ -33,16 +33,15 @@ const Feed = (props) => {
     })
 
 
-    const breakpointColumnsObj = {
-        default: 4,
-        1600: 3,
+    const Columns = {
+        default: 3,
         1000: 2,
-        600: 1
-    };
+        700: 1
+      };
 
     return (
         <>
-            <Box
+            {/* <Box
                 position='sticky'
                 top='0'
                 backdropFilter='blur(15px)'
@@ -51,11 +50,11 @@ const Feed = (props) => {
                 width='100%'
                 className='site-bar' >
                 {props.mySites}
-            </Box>
+            </Box> */}
 
-
-            <Masonry
-                breakpointCols={breakpointColumnsObj}
+            <Masonry 
+                
+                breakpointCols={Columns}
                 className="my-masonry-grid"
                 columnClassName="my-masonry-grid_column"
             >

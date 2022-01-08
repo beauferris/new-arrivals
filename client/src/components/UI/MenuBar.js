@@ -21,6 +21,7 @@ const MenuBar = () => {
             {isAuthenticated? <LogoutButton/> :    <LoginButton/>}
           
             <Spacer/>
+            {isAuthenticated? 
             <Box>
                 {/* <IconButton  onClick={toggleColorMode}
                     icon={colorMode === "light" ? <IoMdMoon /> : <IoMdSunny />} /> */}
@@ -36,7 +37,7 @@ const MenuBar = () => {
                 <Link to='/shop'>
                     <IconButton icon={<SettingsIcon />} />
                 </Link>
-            </Box>
+            </Box>: " "}
         </Flex>
     )
 }

@@ -31,26 +31,58 @@ recordRoutes.route("/products").get(function (req, res) {
         });
 });
 
-recordRoutes.route("/user").get( function (req, res) {
+recordRoutes.route("/user").get(function (req, res) {
     let db_connect = dbo.getDb("lets-shop");
     
-    // let user = req.query.name;
-    // console.log(req.query.name)
+    
 
-db_connect
+    db_connect
         .collection("users")
-        .findOne({name:'Hamzey Beauferris'},(err, user)=>{
+        .findOne({email:req.query.email},(err, user)=>{
             if (err) throw err;
-            res.json(user)
+            if(!user){
+               db_connect
+                    .collection("users")
+                    .insertOne({
+                        email:req.query.email,
+                        shops:[],
+                        favorites:[]
+                    })
+                    res.json(({
+                        email:req.query.email,
+                        shops:[],
+                        favorites:[]
+                    }))
+            }else{
+                res.json(user)
+            }
         } );
-        
 });
 
-recordRoutes.route("/create").post(async (req, res, next) => {
+recordRoutes.route("/update").post((req,res,)=>{
+    let db_connect = dbo.getDb("lets-shop");
+
+    
+    let user = req.body
+
+    db_connect
+        .collection("users")
+        .updateOne({
+            email: user.email
+        },{$set:{
+            email:user.email,
+            shops: user.shops,
+            favorites:user.favorites }},  (err, user)=>{
+            if (err) throw err;
+                res.json(user)
+        })
+})
+
+
+recordRoutes.route("/create").post(async (req, res) => {
     let shops = require("../index.js")
     let db_connect = dbo.getDb("lets-shop");
 
-    console.log('sho ayre')
 
     let shop = {
         url: req.body.url,

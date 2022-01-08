@@ -61,7 +61,7 @@ async function run(products) {
             } else {
                 const p = await col.insertOne(product);
                 const myDoc = await col.findOne();
-                console.log(product)
+               // console.log(product)
             }
         }
     } catch (err) {
@@ -125,7 +125,7 @@ const getShopifyNewArrivals = ((products_url, store) => {
 async function shops() {
     try {
         await client.connect();
-        //console.log("Getting shops");
+        console.log("Getting shops");
         const db = client.db(dbName);
         const col = db.collection("shops");
 

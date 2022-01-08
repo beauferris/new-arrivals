@@ -26,7 +26,7 @@ const RadioCard = (props) => {
                 fontSize={15}
                 onClick={props.toggle}
                 value={props.name}>
-                {JSON.parse(props.checked) ? "Following" : "Follow"}
+                {props.checked ? "Following" : "Follow"}
             </Button>
         </Flex>)
 }

@@ -7,13 +7,14 @@ import SiteButton from './components/UI/FilterButton';
 import MenuBar from './components/UI/MenuBar';
 import Feed from './components/Feed';
 import ShopSearch from './components/ShopSearch';
-import LazyLoad from 'react-lazyload';
+
 import AddShop from './components/AddShop';
 import RadioCard from './components/UI/RadioCard';
 import {
-  useToast,
+  // useToast,
   Divider
 } from "@chakra-ui/react"
+
 
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -23,27 +24,27 @@ import {
   Route,
 } from "react-router-dom";
 
-const allCategories = ["All", "tops", "outer", "accessories", "footwear", "bottoms", "dresses", "home", "Misc"]
+//const allCategories = ["All", "tops", "outer", "accessories", "footwear", "bottoms", "dresses", "home", "Misc"]
 
 function App() {
-  const { logout, user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
   const [search, setSearch] = useState("")
   const [allProducts, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
-  const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('localFavorites')) || [])
-  const toast = useToast()
-  const [myShops, setMyShops] = useState(JSON.parse(localStorage.getItem('localShops')) || [])
+  // const toast = useToast()
+  const [myShops, setMyShops] = useState([])
   const [categories, setCategories] = useState([])
 
   // const [userData, setUserData]= useState(isAuthenticated?[{
   //   name: user.name,
   // }]: [])
 
+  const [userData, setUserData] = useState([])
 
   const fetchUser = async () => {
     try {
-      let userData = await axios.get("https://calm-harbor-25651.herokuapp.com/user")
-      console.log(userData)
+      let ud = isAuthenticated ? await axios.get("http://localhost:5001/user", { params: { email: user.email } }) : ""
+      setUserData(ud.data)
     } catch (err) {
       console.log(err)
     }
@@ -53,49 +54,45 @@ function App() {
     axios.get("https://calm-harbor-25651.herokuapp.com/products")
       .then(res => {
         setProducts(res.data.sort((a, b) => new Date(b.date) - new Date(a.date)))
-        setLoading(false);
-        // let newCategories = []
-        // res.data.map(shop => {
-        //   if (shop.category !== undefined && shop.category !== "") {
-        //     newCategories.push(shop.category)
-        //   }
-        // })
-        // let uniqueCategories = [...new Set(newCategories)]
+        setLoading(false)
       }).catch(err => console.log(`Error: ${err}`));
   }
 
   const fetchShops = () => {
     axios.get("https://calm-harbor-25651.herokuapp.com/shops")
       .then(res => {
-        if (JSON.parse(localStorage.getItem('localShops')).length === 0) {
-          localStorage.setItem('localShops', JSON.stringify(res.data))
-        }
-        setMyShops(JSON.parse(localStorage.getItem('localShops')) || res.data)
+        setMyShops(res.data)
       }).catch(err => console.log(`Error: ${err}`));
   }
 
   useEffect(() => {
+    axios.post("http://localhost:5001/update", userData)
+      .then(res => {
+        console.log(res)
+      }).catch(err => {
+        if (err) throw err
+      })
+  }, [userData])
 
+  useEffect(() => {
     fetchUser()
-
-
-  }, [])
+  }, [isAuthenticated])
 
   useEffect(() => {
     fetchShops();
-  }, [])
+  }, [userData, isAuthenticated])
 
-  useEffect(() => {
-    localStorage.setItem('localShops', JSON.stringify(myShops))
-    localStorage.setItem('localFavorites', JSON.stringify(favorites))
-    setCategories(allCategories.map(category => {
-      return {
-        category: category,
-        isActive: true
-      }
-    }))
-  }, [favorites, myShops])
 
+  // useEffect(() => {
+  //   localStorage.setItem('localShops', JSON.stringify(myShops))
+  //   localStorage.setItem('localFavorites', JSON.stringify(favorites))
+  //   setCategories(allCategories.map(category => {
+  //     return {
+  //       category: category,
+  //       isActive: true
+  //     }
+  //   }))
+  // }, [favorites, myShops])
 
   useEffect(() => {
     fetchProducts();
@@ -108,36 +105,67 @@ function App() {
 
   //add/remove products from favorites
   const favoriteItem = (event) => {
-    const value = event.currentTarget.value;
-    const newFavs = [...favorites]
-    const index = allProducts.findIndex(index => index.title === value)
-    const product = allProducts[index]
-    console.log(product)
-    const check = newFavs.some(check => {
-      return check.title === value
-    })
-    if (check) {
-      const indexFav = newFavs.findIndex(fav => fav.title === value)
-      newFavs.splice(indexFav, 1)
+    let favorites = [...userData.favorites]
+    let value = event.currentTarget.value
+    console.log(value)
+
+    if (favorites.includes(event.currentTarget.value)) {
+      let index = favorites.indexOf(event.currentTarget.value)
+      favorites.splice(index, 1)
     } else {
-      newFavs.push(product);
+      favorites = [...favorites, event.currentTarget.value]
     }
-    setFavorites(newFavs)
+
+    setUserData({
+      ...userData,
+      favorites: favorites
+    })
+
+
+
+    // const value = event.currentTarget.value;
+    // const newFavs = [...favorites]
+    // const index = allProducts.findIndex(index => index.title === value)
+    // const product = allProducts[index]
+    // console.log(product)
+    // const check = newFavs.some(check => {
+    //   return check.title === value
+    // })
+    // if (check) {
+    //   const indexFav = newFavs.findIndex(fav => fav.title === value)
+    //   newFavs.splice(indexFav, 1)
+    // } else {
+    //   newFavs.push(product);
+    // }
+    // setFavorites(newFavs)
   }
 
   //follow shops
   const toggleShop = (event) => {
+    let shops = [...userData.shops]
 
-    setMyShops(myShops =>
-      myShops.map((shop) =>
-        shop.name === event.currentTarget.value
-          ? {
-            ...shop,
-            checked: !JSON.parse(shop.checked),
-            isActive: !JSON.parse(shop.checked)
-          } : shop
-      )
-    )
+    if (shops.includes(event.currentTarget.value)) {
+      let index = shops.indexOf(event.currentTarget.value)
+      shops.splice(index, 1)
+    } else {
+      shops = [...shops, event.currentTarget.value]
+    }
+
+    setUserData({
+      ...userData,
+      shops: shops
+    })
+
+    // setMyShops(myShops =>
+    //   myShops.map((shop) =>
+    //     shop.name === event.currentTarget.value
+    //       ? {
+    //         ...shop,
+    //         checked: !JSON.parse(shop.checked),
+    //         isActive: !JSON.parse(shop.checked)
+    //       } : shop
+    //   )
+    // )
 
     // const index = myShops.findIndex(shop => shop.name === event.currentTarget.value);
     // const shopsCopy = [...myShops];
@@ -196,41 +224,55 @@ function App() {
   });
 
   //return shops user is following
-  const active = myShops.filter(site => JSON.parse(site.isActive) === true).map(store => {
-    return store.name
-  })
+  const active = userData ? myShops.filter(site => userData.shops?.includes(site.name)).map(store => {
+    return (store.name)
+  }) : " "
 
 
-  const activeCategories = categories.filter(category => JSON.parse(category.isActive) === true).map(store => {
-    return store.category
-  })
+
+  // const activeCategories = categories.filter(category => JSON.parse(category.isActive) === true).map(store => {
+  //   return store.category
+  // })
+
   //return favorites
-  const myFavorites = favorites.map((product, index) => {
-    return (
-      <>
-        <ProductItem
-          key={index}
-          loading={loading}
-          toggleFavorite={favoriteItem}
-          store={product.store}
-          url={product.url}
-          img={product.img}
-          brand={product.brand}
-          title={product.title}
-          price={product.price}
-          isFavorite={favorites.find((item) => item.title === product.title)}
-          icon={myShops.find((shop) => shop.name === product.store)}
-        ></ProductItem>
-      </>)
-  })
+  const myFavorites = userData ?
+    allProducts.filter(product => userData.favorites.includes(product.id.toString())).map((product, index) => {
+      return (<ProductItem
+        identifier={product.id}
+        key={product.id}
+        loading={loading}
+        toggleFavorite={favoriteItem}
+        store={product.store}
+        url={product.url}
+        img={product.img}
+        brand={product.brand}
+        title={product.title}
+        price={product.price}
+        isFavorite={userData.favorites.includes(product.id.toString())}
+        icon={myShops.find((shop) => shop.name === product.store)}
+      ></ProductItem>)
+    }) : ""
+
+  const allSites = userData ?
+    myShops.filter(shop => shop.name.includes(search)).map(shop => {
+      return (<RadioCard
+        name={shop.name}
+        url={shop.url}
+        value={shop.name}
+        checked={userData.shops.includes(shop.name)}
+        toggle={toggleShop}
+        favicon={shop.favicon} />)
+    }) : " "
 
   //return products filtered by active filter
   const products = allProducts.filter(product => active.includes(product.store))
-    .filter(product => activeCategories.includes(product.category))
+    // .filter(product => activeCategories.includes(product.category))
     .map(product => {
+
       return (
-        <LazyLoad key={product.id} >
+       
           <ProductItem
+            identifier={product.id}
             key={product.id}
             loading={loading}
             toggleFavorite={favoriteItem}
@@ -240,10 +282,10 @@ function App() {
             brand={product.brand}
             title={product.title}
             price={product.price}
-            isFavorite={favorites.find((item) => item.title === product.title)}
+            isFavorite={userData.favorites.includes(product.id.toString())}
             icon={myShops.find((shop) => shop.name === product.store)}
           ></ProductItem>
-        </LazyLoad>
+       
       )
     })
 
@@ -251,14 +293,6 @@ function App() {
   // const mySites = myShops.filter(shop => JSON.parse(shop.checked) === true).map((site, index) =>
   //   <SiteButton logo={site.logo} key={index} name={site.name} isActive={site.isActive} filter={updateShops} />
   // )
-
-
-  const allSites = myShops.filter(shop => shop.name.includes(search)).map(shop => {
-    return (
-      <>
-        <RadioCard name={shop.name} url={shop.url} value={shop.name} checked={JSON.parse(shop.checked)} toggle={toggleShop} favicon={shop.favicon} />
-      </>)
-  })
 
   return (
     <div className="App">

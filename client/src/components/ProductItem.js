@@ -11,31 +11,33 @@ import {
     SkeletonText,
     Image
 } from "@chakra-ui/react"
-
+import { forceCheck } from 'react-lazyload';
 import { IoIosHeart, IoIosHeartEmpty } from 'react-icons/io'
+
+import './ProductItem.css'
+//   {/* <LazyLoad className="product"  offset={200} placeholder={<Skeleton minHeight={500}/>} > */}
 
 const ProductItem = (props) => {
     let favorited = props.isFavorite;
     let shop = props.icon;
-
+    forceCheck()
     return (
-        <Box>
+        <Box >
             <Skeleton speed='2' mb="1" mt="1" isLoaded={!props.loading} >
                 <Link href={props.url} target='_blank' rel="noreferrer">
-                    <Img
-                        border="1px"
-                        w="100%"
-                        borderColor="gray.200"
-                        srcSet={props.img}
-                        mt={2}
 
-                        d="inline-block"
+                    <Img
+                        className="product"
+                        loading="lazy"
+                        width="700px" 
+                        mb={2}
+                        srcSet={props.img}
                         alt={props.title} />
                 </Link> </Skeleton>
 
 
             <Grid templateColumns="40px 1fr auto ">
-                
+
                 <Skeleton speed='2' isLoaded={!props.loading} >
                     <GridItem  >
                         <Image src={shop?.favicon}></Image>
@@ -50,7 +52,7 @@ const ProductItem = (props) => {
                 <GridItem >
                     <Skeleton speed='2' isLoaded={!props.loading}>
                         <IconButton m='0'
-                            value={props.title}
+                            value={props.identifier}
                             onClick={props.toggleFavorite}
                             icon={favorited ? <IoIosHeart style={{ color: 'red' }} /> : <IoIosHeartEmpty style={{ color: 'red' }} />}
                         /></Skeleton></GridItem>
