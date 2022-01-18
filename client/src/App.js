@@ -62,7 +62,7 @@ function App() {
   }
 
   useEffect(() => {
-    axios.post("http://localhost:5001/update", userData)
+    axios.post("https://calm-harbor-25651.herokuapp.com/update", userData)
       .then(res => {
         console.log(res)
       }).catch(err => {
