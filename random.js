@@ -13,6 +13,22 @@ const doverstreet = 'https://shop.doverstreetmarket.com/collections/whats-new/pr
 const lessonseven = 'https://lessoneseven.com/collections/latest-arrivals/products.json'
 const braindead = 'https://wearebraindead.com/products.json'
 
+ // setMyShops(myShops =>
+    //   myShops.map((shop) =>
+    //     shop.name === event.currentTarget.value
+    //       ? {
+    //         ...shop,
+    //         checked: !JSON.parse(shop.checked),
+    //         isActive: !JSON.parse(shop.checked)
+    //       } : shop
+    //   )
+    // )
+
+    // const index = myShops.findIndex(shop => shop.name === event.currentTarget.value);
+    // const shopsCopy = [...myShops];
+    // shopsCopy[index].checked = !JSON.parse(shopsCopy[index].checked) 
+    // shopsCopy[index].isActive = shopsCopy[index].checked
+    // setMyShops(shopsCopy)
 
 
 //get new arrivals tres bien

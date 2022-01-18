@@ -2,10 +2,9 @@ const express = require("express");
 const recordRoutes = express.Router();
 const dbo = require("../db/conn");
 const cheerio = require('cheerio');
-
 const axios = require("axios")
 
-// This section will help you get a list of all the records.
+//get all shops
 recordRoutes.route("/shops").get(function (req, res) {
     let db_connect = dbo.getDb("lets-shop");
 
@@ -17,8 +16,7 @@ recordRoutes.route("/shops").get(function (req, res) {
             res.json(result);
         });
 });
-
-
+//get all products
 recordRoutes.route("/products").get(function (req, res) {
     let db_connect = dbo.getDb("lets-shop");
 
@@ -30,12 +28,10 @@ recordRoutes.route("/products").get(function (req, res) {
             res.json(result);
         });
 });
-
+//get user data
 recordRoutes.route("/user").get(function (req, res) {
     let db_connect = dbo.getDb("lets-shop");
     
-    
-
     db_connect
         .collection("users")
         .findOne({email:req.query.email},(err, user)=>{
@@ -58,11 +54,9 @@ recordRoutes.route("/user").get(function (req, res) {
             }
         } );
 });
-
+//update user data
 recordRoutes.route("/update").post((req,res,)=>{
     let db_connect = dbo.getDb("lets-shop");
-
-    
     let user = req.body
 
     db_connect
@@ -77,8 +71,7 @@ recordRoutes.route("/update").post((req,res,)=>{
                 res.json(user)
         })
 })
-
-
+//add shops
 recordRoutes.route("/create").post(async (req, res) => {
     let shops = require("../index.js")
     let db_connect = dbo.getDb("lets-shop");
@@ -89,10 +82,10 @@ recordRoutes.route("/create").post(async (req, res) => {
         name: req.body.name,
         checked: "false",
         isActive: "false",
-        favicon: " "
+        favicon: " ",
+        search:[]
     }
   
-
     const getFavicon = (url) => {
         axios(url)
             .then(res => {

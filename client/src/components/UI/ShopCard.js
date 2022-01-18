@@ -1,9 +1,9 @@
 import { Box, Flex, Button, Spacer, Image,Text } from "@chakra-ui/react"
 
-const RadioCard = (props) => {
+const ShopCard = (props) => {
     return (
         <Flex borderBottom='1px' borderColor='gray.200' >
-            <Image boxSize='60px' src={props.favicon} mb='2' />
+            <Image boxSize='55px' src={props.favicon} mb='2' />
 
             <Box 
             
@@ -12,6 +12,7 @@ const RadioCard = (props) => {
               display='inline-block' 
               textOverflow='ellipsis' 
               whiteSpace='nowrap' 
+              
               width='100%'
              >
                 <Text  isTruncated>{props.name.replace("shop.","")}</Text>
@@ -31,4 +32,4 @@ const RadioCard = (props) => {
         </Flex>)
 }
 
-export default RadioCard;
+export default ShopCard;

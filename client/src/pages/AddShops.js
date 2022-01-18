@@ -1,13 +1,8 @@
-import {
-    Input, Icon, Button, Box, InputGroup, InputLeftAddon, FormLabel,
-} from '@chakra-ui/react'
+import {Input, Icon, Button, Box, InputGroup, InputLeftAddon,Heading}from '@chakra-ui/react'
 import axios from 'axios';
-
 import { useState } from 'react'
 
-
-
-const AddShop = (props) => {
+const AddShops = (props) => {
     const ShopifyIcon = (props) => (
         <Icon
             viewBox="0 0 16 16"
@@ -68,25 +63,26 @@ const AddShop = (props) => {
     }
 
     return (
-        <Box m='3' >
+        <Box >
             <form onSubmit={submitUrl}>
-                <FormLabel htmlFor='url'>Add</FormLabel>
-                <InputGroup>
+                <Heading m='3' htmlFor='url'>Add</Heading>
+             <Box m='3'>
+                <InputGroup >
                     <InputLeftAddon > <ShopifyIcon boxSize={6} /></InputLeftAddon>
                     <Input
                         type='url'
                         id='url'
                         placeholder='https://shop.com/new-arrivals/products.json'
                         onChange={onUrlChange}
-                        mb='2'
                     />
-                    
                 </InputGroup>
+                </Box>
                 {error ? <h1>{error}</h1> : ""}
-                <Button type="submit">Add</Button>
+                <Button m='3' type="submit">Add</Button>
             </form>
+            
         </Box>
     )
 }
 
-export default AddShop
+export default AddShops

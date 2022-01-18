@@ -15,7 +15,7 @@ ReactDOM.render(
     clientId='5FkDWQUeysnhLGU0rpXWmMiBxDWsa9da'
     redirectUri={window.location.origin}>
   <React.StrictMode>
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <App />
     </ChakraProvider>

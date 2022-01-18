@@ -1,7 +1,7 @@
-// import {
-//     Box
+import {
+    Box
 
-// } from '@chakra-ui/react';
+} from '@chakra-ui/react';
 import './Feed.css';
 import ProductItem from './ProductItem';
 
@@ -20,7 +20,6 @@ const Feed = (props) => {
         return (
             <>
                 <ProductItem
-                    key={index}
                     loading={props.loading}
                     store={product.store}
                     url={product.url}
@@ -41,7 +40,7 @@ const Feed = (props) => {
 
     return (
         <>
-            {/* <Box
+            <Box
                 position='sticky'
                 top='0'
                 backdropFilter='blur(15px)'
@@ -50,7 +49,7 @@ const Feed = (props) => {
                 width='100%'
                 className='site-bar' >
                 {props.mySites}
-            </Box> */}
+            </Box>
 
             <Masonry 
                 
@@ -58,7 +57,6 @@ const Feed = (props) => {
                 className="my-masonry-grid"
                 columnClassName="my-masonry-grid_column"
             >
-                {props.loading ? Array.from({ length: 16 }, () => skeleton) : null}
                 {props.products}
             </Masonry>
 
