@@ -39,7 +39,7 @@ function App() {
 
   const fetchUser = async () => {
     try {
-      let ud = isAuthenticated ? await axios.get("http://localhost:5001/user", { params: { email: user.email } }) : ""
+      let ud = isAuthenticated ? await axios.get("https://calm-harbor-25651.herokuapp.com/user", { params: { email: user.email } }) : ""
       setUserData(ud.data)
     } catch (err) {
       console.log(err)
