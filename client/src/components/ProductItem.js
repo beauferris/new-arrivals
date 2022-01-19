@@ -9,18 +9,19 @@ import {
     GridItem,
     Skeleton,
     SkeletonText,
-    Image
 } from "@chakra-ui/react"
-import LazyLoad, { forceCheck } from 'react-lazyload';
+
 import { IoIosHeart, IoIosHeartEmpty } from 'react-icons/io'
 
+//auth
+import { useAuth0 } from "@auth0/auth0-react";
+
 import './ProductItem.css'
-//   {/* <LazyLoad className="product"  offset={200} placeholder={<Skeleton minHeight={500}/>} > */}
 
 const ProductItem = (props) => {
     let favorited = props.isFavorite;
     let shop = props.icon;
-    forceCheck()
+
     return (
         <Box className="product" >
             <Skeleton speed='2' mb="1" mt="1" isLoaded={!props.loading} >

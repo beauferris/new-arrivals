@@ -26,7 +26,7 @@ import { HashRouter as Router, Routes, Route } from "react-router-dom";
 const allCategories = ["All", "tops", "outer", "accessories", "footwear", "bottoms", "dresses", "home", "Misc"]
 
 function App() {
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated, isLoading } = useAuth0();
 
   const [search, setSearch] = useState("")
 
@@ -35,7 +35,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [myShops, setMyShops] = useState([])
   const [categories, setCategories] = useState([])
- 
+
 
   const fetchUser = async () => {
     try {
@@ -184,7 +184,7 @@ function App() {
 
 
 
-  const allSites = search === ""? "":
+  const allSites = search === "" ? "" :
     myShops.filter(shop => shop.search?.some(item => item.includes(search))).map(shop => {
       return (<ShopCard
         key={shop._id}
@@ -197,7 +197,7 @@ function App() {
     })
 
   //return favorites
-  const myFavorites = 
+  const myFavorites =
     allProducts.filter(product => userData?.favorites.includes(product.id.toString())).map((product, index) => {
       return (<ProductItem
         identifier={product.id}
@@ -213,9 +213,9 @@ function App() {
         isFavorite={userData.favorites.includes(product.id.toString())}
         icon={myShops.find((shop) => shop.name === product.store)}
       ></ProductItem>)
-    }) 
+    })
 
-  const follows = 
+  const follows =
     myShops.filter(shop => userData?.shops?.includes(shop.name)).map(shop => {
       return (<ShopCard
         key={shop._id}
@@ -225,9 +225,9 @@ function App() {
         checked={userData.shops?.includes(shop.name)}
         toggle={toggleShop}
         favicon={shop.favicon} />)
-    }) 
+    })
 
-  const recommended = 
+  const recommended =
     myShops.map(shop => {
       return (<ShopCard
         key={shop._id}
@@ -237,33 +237,34 @@ function App() {
         checked={userData?.shops?.includes(shop.name)}
         toggle={toggleShop}
         favicon={shop.favicon} />)
-    }) 
+    })
 
   //return products filtered by active filter
-  const products = isAuthenticated?  allProducts.filter(product => active.includes(product.store))
+  const products = isAuthenticated || isLoading ? allProducts.filter(product => active.includes(product.store))
     //.filter(product => activeCategories.includes(product.category))
     .map(product => {
       return (
-        <LazyLoad offset={500} placeholder={<Skeleton mb={1} height={500} />}>
-          <ProductItem
-            identifier={product.id}
-            key={product._id}
-            loading={loading}
-            toggleFavorite={favoriteItem}
-            store={product.store}
-            url={product.url}
-            img={product.img}
-            brand={product.brand}
-            title={product.title}
-            price={product.price}
-            isFavorite={userData.favorites.includes(product.id.toString())}
-            icon={myShops.find((shop) => shop.name === product.store)}
-          ></ProductItem>
-        </LazyLoad>
+       
+          <LazyLoad offset={100} placeholder={<Skeleton mb={1} height={500} />}>
+            <ProductItem
+              identifier={product.id}
+              key={product._id}
+              loading={loading}
+              toggleFavorite={favoriteItem}
+              store={product.store}
+              url={product.url}
+              img={product.img}
+              brand={product.brand}
+              title={product.title}
+              price={product.price}
+              isFavorite={userData.favorites.includes(product.id.toString())}
+              icon={myShops.find((shop) => shop.name === product.store)}
+            ></ProductItem>
+          </LazyLoad>
       )
     }) : allProducts.map((product, index) => {
       return (
-        <LazyLoad offset={500} placeholder={<Skeleton mb={1} height={500} />}>
+        <LazyLoad offset={100} placeholder={<Skeleton mb={1} height={500} />}>
           <ProductItem
             identifier={product.id}
             key={product.id}
@@ -280,24 +281,22 @@ function App() {
           ></ProductItem></LazyLoad>)
     })
 
-
-
   return (
     <ProductsContext.Provider value={{ msg: "Feed" }}>
       <div className="App">
         <Router>
-          <MenuBar />
+          <MenuBar loading={loading} />
           <Divider />
 
-          <Routes><Route exact path='/' element={<MainFeed products={products} />} />
-            <Route path='favorites' element={<FavoritesFeed products={myFavorites} />} />
+          <Routes><Route exact path='/' element={<MainFeed loadingFeed={loading} products={products} />} />
+            <Route path='favorites' element={<FavoritesFeed loadingFeed={loading} products={myFavorites} />} />
             <Route path='shop' element={<ShopSearch
               search={search}
               sites={allSites}
               recommended={recommended.slice(0, 6)}
               searchInput={searchListener} />} />
             <Route path='add' element={<AddShops />} />
-            <Route path='follows' element={<Following follows={follows} />} /> </Routes> 
+            <Route path='follows' element={<Following follows={follows} />} /> </Routes>
         </Router>
       </div>
     </ProductsContext.Provider>

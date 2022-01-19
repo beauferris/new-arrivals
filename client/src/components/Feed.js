@@ -1,46 +1,18 @@
-import {
-    Box
-
-} from '@chakra-ui/react';
 import './Feed.css';
-import ProductItem from './ProductItem';
-
 import Masonry from "react-masonry-css";
-const placeholders = [
-    {
-        "_id": "6196ec14b28525759dc56910",
-        "brand": "uniqlo", "title": "extra fine cotton ",
-        "price": "$29.90", "url": "https://uniqlo.com/us/en/extra-fine-cotton-broadcloth-long-sleeve-shirt-441714.html?dwvar_441714_color=COL03",
-        "img": "https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/441714/item/goods_03_441714.jpg?width=380",
-        "store": "uniqlo-mens", "date": 1637280786519
-    }]
+import SkeletonFeed from './UI/SkeletonFeed';
 
 const Feed = (props) => {
-    const skeleton = placeholders.map((product, index) => {
-        return (
-            <>
-                <ProductItem
-                    loading={props.loading}
-                    store={product.store}
-                    url={product.url}
-                    img={product.img}
-                    brand={product.brand}
-                    title={product.title}
-                    price={product.price}
-                ></ProductItem>
-            </>)
-    })
-
-
+ 
     const Columns = {
         default: 3,
         1000: 2,
         700: 1
-      };
+    };
 
     return (
         <>
-            <Box
+            {/* <Box
                 position='sticky'
                 top='0'
                 backdropFilter='blur(15px)'
@@ -49,16 +21,16 @@ const Feed = (props) => {
                 width='100%'
                 className='site-bar' >
                 {props.mySites}
-            </Box>
+            </Box> */}
 
-            <Masonry 
-                
+           
+               {props.loading || props.loadingFeed? <SkeletonFeed/>: 
+               
+                <Masonry
                 breakpointCols={Columns}
                 className="my-masonry-grid"
-                columnClassName="my-masonry-grid_column"
-            >
-                {props.products}
-            </Masonry>
+                columnClassName="my-masonry-grid_column">
+               {props.products}</Masonry>}
 
         </>
     )

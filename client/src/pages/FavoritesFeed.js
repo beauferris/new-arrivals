@@ -1,10 +1,12 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Skeleton } from "@chakra-ui/react";
 import Feed from "../components/Feed";
-
+import { useAuth0 } from "@auth0/auth0-react";
 const FavoritesFeed = (props) => {
+    const {isLoading } = useAuth0();
     return (<Box>
-        <Heading m='3'>Favorites</Heading>
-        <Feed products={props.products} />
+         <Skeleton m='2' width='30%' isLoaded={!props.loadingFeed && !isLoading}><Heading>Favorites</Heading></Skeleton>
+        
+        <Feed loadingFeed={isLoading} loading={props.loadingFeed} products={props.products} />
     </Box>
     )
 }
