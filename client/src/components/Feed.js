@@ -7,7 +7,7 @@ const Feed = (props) => {
     const Columns = {
         default: 3,
         1000: 2,
-        700: 1
+        600: 1
     };
 
     return (

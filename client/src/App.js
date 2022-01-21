@@ -2,7 +2,7 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProductsContext from './context/products-context';
-
+import CategoryPage from './components/CategoryPage';
 //import UI components
 import SiteButton from './components/UI/FilterButton';
 import MenuBar from './components/UI/MenuBar';
@@ -293,8 +293,11 @@ function App() {
             <Route path='shop' element={<ShopSearch
               search={search}
               sites={allSites}
+              shop={myShops}
               recommended={recommended.slice(0, 6)}
-              searchInput={searchListener} />} />
+              searchInput={searchListener} />} >
+                
+            </Route><Route path='shop/:id'  element={<CategoryPage userData={userData} shops={myShops} toggle={toggleShop}/>}></Route>
             <Route path='add' element={<AddShops />} />
             <Route path='follows' element={<Following follows={follows} />} /> </Routes>
         </Router>

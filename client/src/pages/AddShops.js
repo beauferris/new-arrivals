@@ -63,13 +63,14 @@ const AddShops = (props) => {
     }
 
     return (
-        <Box >
+        <Box m={{ base: '3', md: '5' }}>
             <form onSubmit={submitUrl}>
-                <Heading m='3' htmlFor='url'>Add</Heading>
-             <Box m='3'>
+                <Heading mb='5' htmlFor='url'>Add</Heading>
+             <Box >
                 <InputGroup >
                     <InputLeftAddon > <ShopifyIcon boxSize={6} /></InputLeftAddon>
                     <Input
+                    w={{ base: '500px', md: '600px' }}
                         type='url'
                         id='url'
                         placeholder='https://shop.com/new-arrivals/products.json'
@@ -78,7 +79,7 @@ const AddShops = (props) => {
                 </InputGroup>
                 </Box>
                 {error ? <h1>{error}</h1> : ""}
-                <Button m='3' type="submit">Add</Button>
+                <Button mt='1' type="submit">Add</Button>
             </form>
             
         </Box>

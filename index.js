@@ -72,7 +72,7 @@ async function run(products) {
                         "name": product.store
                     }, {
                         $addToSet: {
-                            search: product.brand
+                            search: product.brand.toLowerCase()
                         }
                     })
 

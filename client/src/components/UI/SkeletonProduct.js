@@ -4,7 +4,7 @@ import { Flex, Box, Skeleton, SkeletonCircle, SkeletonText, Stack } from "@chakr
 const SkeletonProduct = () => {
     return (
         <Stack mb='3' >
-            <Skeleton height={500} />
+            <Skeleton height='400' />
             <Flex >
                 <SkeletonText width='80%' />
                 <SkeletonCircle ml='1' size={10} />

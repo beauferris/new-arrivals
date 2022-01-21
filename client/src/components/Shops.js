@@ -3,7 +3,7 @@ import {SimpleGrid,
 
 const Shops = (props) =>{
     return(
-        <SimpleGrid m='3' minChildWidth={'300px'} spacing={5}>
+        <SimpleGrid m='3' columns={{base:'1', sm:'2', md:'3' }} spacing={5}>
             {props.follows}
         </SimpleGrid>
     )
