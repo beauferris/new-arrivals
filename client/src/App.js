@@ -3,12 +3,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProductsContext from './context/products-context';
 import CategoryPage from './components/CategoryPage';
+
 //import UI components
-import SiteButton from './components/UI/FilterButton';
 import MenuBar from './components/UI/MenuBar';
 import ShopCard from './components/UI/ShopCard';
 import ProductItem from './components/ProductItem';
 
+import InfiniteScroll from 'react-infinite-scroll-component';
+import qs from 'qs';
 //auth
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -23,7 +25,6 @@ import LazyLoad from 'react-lazyload';
 import { Divider, Skeleton } from "@chakra-ui/react"
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
-const allCategories = ["All", "tops", "outer", "accessories", "footwear", "bottoms", "dresses", "home", "Misc"]
 
 function App() {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -32,26 +33,51 @@ function App() {
 
   const [userData, setUserData] = useState([])
   const [allProducts, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [myShops, setMyShops] = useState([])
-  const [categories, setCategories] = useState([])
+  const [skip, setSkip] = useState(0)
+  const [max, setMax] = useState(0)
 
 
   const fetchUser = async () => {
     try {
-      let ud = isAuthenticated ? await axios.get("https://calm-harbor-25651.herokuapp.com/user", { params: { email: user.email } }) : ""
+      let ud = isAuthenticated ? await axios.get("https://calm-harbor-25651.herokuapp.com/user",
+        { params: { email: user.email } }) : ""
       setUserData(ud.data)
     } catch (err) {
       console.log(err)
     }
   }
 
-  const fetchProducts = () => {
-    axios.get("https://calm-harbor-25651.herokuapp.com/products")
-      .then(res => {
-        setProducts(res.data.sort((a, b) => new Date(b.date) - new Date(a.date)))
-        setLoading(false)
-      }).catch(err => console.log(`Error: ${err}`));
+  const fetchProducts = async () => {
+
+    try {
+      let res = userData ? await axios.get("http://localhost:5001/products", {
+        params: { skip: skip, shops: userData?.shops },
+        paramsSerializer: params => {
+          return qs.stringify(params)
+        }
+      }) : ''
+
+      const copy = [...allProducts]
+      console.log(res.data.count)
+      setMax(res.data.count)
+
+      setProducts(prevState => {
+        console.log(prevState)
+        return (
+          [...new Set([...allProducts, ...res.data.result])]
+        )
+
+      }
+
+      )
+
+      setSkip(skip + 3)
+
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const fetchShops = () => {
@@ -78,18 +104,10 @@ function App() {
     fetchShops();
   }, [userData, isAuthenticated])
 
-  useEffect(() => {
-    setCategories(allCategories.map(category => {
-      return {
-        category: category,
-        isActive: true
-      }
-    }))
-  }, [])
-
-  useEffect(() => {
-    fetchProducts();
-  }, [myShops, categories])
+  // useEffect(() => {
+  //   setSkip(0);
+  //   fetchProducts();
+  // }, [myShops])
 
   //Search bar 
   const searchListener = (event) => {
@@ -130,59 +148,7 @@ function App() {
       ...userData,
       shops: shops
     })
-
-
-    // toast({
-    //   position: "bottom-left",
-    //   duration: 2000,
-    //   render: () => (
-    //     <Box color="white" p={3} bg="blue.500">
-    //       {myShops[index].checked ? "Subscribed to " + myShops[index].name : "unsubscribed to " + shopsCopy[index].name}
-    //     </Box>
-    //   ),
-    // })
   }
-
-  // const updateCategories = async (event) => {
-  //   setLoading(true)
-
-  //   const index = categories.findIndex(category => category.category === event.target.value);
-  //   const filterCategoriesCopy = [...categories];
-
-  //   if (filterCategoriesCopy[index].category === 'All') {
-  //     if (!filterCategoriesCopy[index].isActive) {
-  //       filterCategoriesCopy.map(category => {
-  //         category.isActive = true
-  //       })
-  //     } else {
-  //       filterCategoriesCopy.map(category => {
-  //         category.isActive = false;
-  //       })
-  //     }
-  //   } else {
-  //     filterCategoriesCopy[0].isActive = false
-  //     filterCategoriesCopy[index].isActive = !filterCategoriesCopy[index].isActive;
-
-  //   }
-  //   setCategories(filterCategoriesCopy)
-  // }
-
-  // const myCategories = categories.map((category, index) => {
-  //   return (
-  //     <SiteButton key={index} value={category.category} name={category.category} isActive={category.isActive} filter={updateCategories} />
-  //   )
-  // });
-
-  //return shops user is following
-  const active = userData ? myShops.filter(site => userData.shops?.includes(site.name)).map(store => {
-    return (store.name)
-  }) : " "
-
-  // const activeCategories = categories.filter(category => JSON.parse(category.isActive) === true).map(store => {
-  //   return store.category
-  // })
-
-
 
   const allSites = search === "" ? "" :
     myShops.filter(shop => shop.search?.some(item => item.includes(search))).map(shop => {
@@ -240,31 +206,28 @@ function App() {
     })
 
   //return products filtered by active filter
-  const products = isAuthenticated || isLoading ? allProducts.filter(product => active.includes(product.store))
+  const products = isAuthenticated || isLoading ? allProducts
     //.filter(product => activeCategories.includes(product.category))
     .map(product => {
       return (
-       
-          <LazyLoad offset={100} placeholder={<Skeleton mb={1} height={500} />}>
-            <ProductItem
-              identifier={product.id}
-              key={product._id}
-              loading={loading}
-              toggleFavorite={favoriteItem}
-              store={product.store}
-              url={product.url}
-              img={product.img}
-              brand={product.brand}
-              title={product.title}
-              price={product.price}
-              isFavorite={userData.favorites.includes(product.id.toString())}
-              icon={myShops.find((shop) => shop.name === product.store)}
-            ></ProductItem>
-          </LazyLoad>
+        <ProductItem
+          identifier={product.id}
+          key={product._id}
+          loading={loading}
+          toggleFavorite={favoriteItem}
+          store={product.store}
+          url={product.url}
+          img={product.img}
+          brand={product.brand}
+          title={product.title}
+          price={product.price}
+          isFavorite={userData.favorites.includes(product.id.toString())}
+          icon={myShops.find((shop) => shop.name === product.store)}
+        ></ProductItem>
       )
     }) : allProducts.map((product, index) => {
       return (
-        <LazyLoad offset={100} placeholder={<Skeleton mb={1} height={500} />}>
+        <LazyLoad offset={250} placeholder={<Skeleton mb={1} height={500} />}>
           <ProductItem
             identifier={product.id}
             key={product.id}
@@ -288,7 +251,27 @@ function App() {
           <MenuBar loading={loading} />
           <Divider />
 
-          <Routes><Route exact path='/' element={<MainFeed loadingFeed={loading} products={products} />} />
+          <Routes><Route exact path='/' element={
+            <InfiniteScroll
+            pullDownToRefresh
+            pullDownToRefreshThreshold={50}
+            pullDownToRefreshContent={
+              <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+            }
+            releaseToRefreshContent={
+              <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+            }
+            dataLength={allProducts.length} //This is important field to render the next data
+            next={fetchProducts}
+            hasMore={skip<=max}
+            loader={<h4>Loading...</h4>}
+            endMessage={
+              <p style={{ textAlign: 'center' }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }>
+
+              <MainFeed loadingFeed={loading} products={products} /></InfiniteScroll>} />
             <Route path='favorites' element={<FavoritesFeed loadingFeed={loading} products={myFavorites} />} />
             <Route path='shop' element={<ShopSearch
               search={search}
@@ -296,8 +279,8 @@ function App() {
               shop={myShops}
               recommended={recommended.slice(0, 6)}
               searchInput={searchListener} />} >
-                
-            </Route><Route path='shop/:id'  element={<CategoryPage userData={userData} shops={myShops} toggle={toggleShop}/>}></Route>
+
+            </Route><Route path='shop/:id' element={<CategoryPage userData={userData} shops={myShops} toggle={toggleShop} />}></Route>
             <Route path='add' element={<AddShops />} />
             <Route path='follows' element={<Following follows={follows} />} /> </Routes>
         </Router>

@@ -22,40 +22,47 @@ recordRoutes.route("/products").get(function (req, res) {
 
     db_connect
         .collection("products")
-        .find({})
+        .find({ store: { $in: Object.values(req.query.shops) } })
+        .sort({ date: -1 })
+        .skip(parseInt(req.query.skip))
+        .limit(3)
         .toArray(function (err, result) {
             if (err) throw err;
-            res.json(result);
-        });
+            db_connect
+                .collection("products")
+                .find({ store: { $in: Object.values(req.query.shops) } })
+                .count((err, count) => res.json({ count: count, result: result }));
+        })
 });
+
 //get user data
 recordRoutes.route("/user").get(function (req, res) {
     let db_connect = dbo.getDb("lets-shop");
-    
+
     db_connect
         .collection("users")
-        .findOne({email:req.query.email},(err, user)=>{
+        .findOne({ email: req.query.email }, (err, user) => {
             if (err) throw err;
-            if(!user){
-               db_connect
+            if (!user) {
+                db_connect
                     .collection("users")
                     .insertOne({
-                        email:req.query.email,
-                        shops:[],
-                        favorites:[]
+                        email: req.query.email,
+                        shops: [],
+                        favorites: []
                     })
-                    res.json(({
-                        email:req.query.email,
-                        shops:[],
-                        favorites:[]
-                    }))
-            }else{
+                res.json(({
+                    email: req.query.email,
+                    shops: [],
+                    favorites: []
+                }))
+            } else {
                 res.json(user)
             }
-        } );
+        });
 });
 //update user data
-recordRoutes.route("/update").post((req,res,)=>{
+recordRoutes.route("/update").post((req, res,) => {
     let db_connect = dbo.getDb("lets-shop");
     let user = req.body
 
@@ -63,12 +70,15 @@ recordRoutes.route("/update").post((req,res,)=>{
         .collection("users")
         .updateOne({
             email: user.email
-        },{$set:{
-            email:user.email,
-            shops: user.shops,
-            favorites:user.favorites }},  (err, user)=>{
+        }, {
+            $set: {
+                email: user.email,
+                shops: user.shops,
+                favorites: user.favorites
+            }
+        }, (err, user) => {
             if (err) throw err;
-                res.json(user)
+            res.json(user)
         })
 })
 //add shops
@@ -83,9 +93,9 @@ recordRoutes.route("/create").post(async (req, res) => {
         checked: "false",
         isActive: "false",
         favicon: " ",
-        search:[]
+        search: []
     }
-  
+
     const getFavicon = (url) => {
         axios(url)
             .then(res => {
@@ -93,21 +103,21 @@ recordRoutes.route("/create").post(async (req, res) => {
                 const $ = cheerio.load(html)
 
                 $('link', html).each(function () {
-                    if ($(this).attr('rel') === 'apple-touch-icon'|| 
-                        $(this).attr('rel') === 'icon' || 
-                            $(this).attr('rel') === 'shortcut icon') {
+                    if ($(this).attr('rel') === 'apple-touch-icon' ||
+                        $(this).attr('rel') === 'icon' ||
+                        $(this).attr('rel') === 'shortcut icon') {
 
                         shop.favicon = $(this).attr('href')
                         console.log($(this).attr('href'))
                     }
                 })
-         
+
             }).catch(error => console.log('erroruniqlom'))
     }
 
 
     const checkJSON = async (products_url) => {
-        getFavicon("https://"+shop.name)
+        getFavicon("https://" + shop.name)
         let resp = await axios(products_url)
         if (typeof resp.data !== "object") {
             res.send("incorrect format")
