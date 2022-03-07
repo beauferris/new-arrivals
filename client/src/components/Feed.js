@@ -24,13 +24,11 @@ const Feed = (props) => {
             </Box> */}
 
            
-               {props.loading || props.loadingFeed? <SkeletonFeed/>: 
-               
                 <Masonry
                 breakpointCols={Columns}
                 className="my-masonry-grid"
                 columnClassName="my-masonry-grid_column">
-               {props.products}</Masonry>}
+               {props.products}</Masonry>
 
         </>
     )

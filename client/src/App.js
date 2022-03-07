@@ -8,8 +8,8 @@ import CategoryPage from './components/CategoryPage';
 import MenuBar from './components/UI/MenuBar';
 import ShopCard from './components/UI/ShopCard';
 import ProductItem from './components/ProductItem';
-
-import InfiniteScroll from 'react-infinite-scroll-component';
+import InfiniteScroll from 'react-infinite-scroller';
+// import InfiniteScroll from 'react-infinite-scroll-component';
 import qs from 'qs';
 //auth
 import { useAuth0 } from "@auth0/auth0-react";
@@ -36,8 +36,6 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [myShops, setMyShops] = useState([])
   const [skip, setSkip] = useState(0)
-  const [max, setMax] = useState(0)
-
 
   const fetchUser = async () => {
     try {
@@ -50,8 +48,8 @@ function App() {
   }
 
   const fetchProducts = async () => {
-
     try {
+
       let res = userData ? await axios.get("http://localhost:5001/products", {
         params: { skip: skip, shops: userData?.shops },
         paramsSerializer: params => {
@@ -59,22 +57,14 @@ function App() {
         }
       }) : ''
 
-      const copy = [...allProducts]
-      console.log(res.data.count)
-      setMax(res.data.count)
-
       setProducts(prevState => {
-        console.log(prevState)
         return (
-          [...new Set([...allProducts, ...res.data.result])]
+          [...new Set([...prevState, ...res.data?.result])]
         )
-
-      }
-
-      )
-
-      setSkip(skip + 3)
-
+      })
+      
+      setSkip(skip + 6)
+   
     } catch (err) {
       console.log(err)
     }
@@ -88,6 +78,7 @@ function App() {
   }
 
   useEffect(() => {
+  
     axios.post("https://calm-harbor-25651.herokuapp.com/update", userData)
       .then(res => {
         console.log(res)
@@ -98,17 +89,14 @@ function App() {
 
   useEffect(() => {
     fetchUser()
+   
   }, [isAuthenticated])
 
   useEffect(() => {
     fetchShops();
   }, [userData, isAuthenticated])
 
-  // useEffect(() => {
-  //   setSkip(0);
-  //   fetchProducts();
-  // }, [myShops])
-
+ 
   //Search bar 
   const searchListener = (event) => {
     setSearch(event.target.value)
@@ -148,6 +136,7 @@ function App() {
       ...userData,
       shops: shops
     })
+  
   }
 
   const allSites = search === "" ? "" :
@@ -245,7 +234,6 @@ function App() {
     })
 
   return (
-    <ProductsContext.Provider value={{ msg: "Feed" }}>
       <div className="App">
         <Router>
           <MenuBar loading={loading} />
@@ -253,23 +241,11 @@ function App() {
 
           <Routes><Route exact path='/' element={
             <InfiniteScroll
-            pullDownToRefresh
-            pullDownToRefreshThreshold={50}
-            pullDownToRefreshContent={
-              <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
-            }
-            releaseToRefreshContent={
-              <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
-            }
-            dataLength={allProducts.length} //This is important field to render the next data
-            next={fetchProducts}
-            hasMore={skip<=max}
-            loader={<h4>Loading...</h4>}
-            endMessage={
-              <p style={{ textAlign: 'center' }}>
-                <b>Yay! You have seen it all</b>
-              </p>
-            }>
+             
+              loadMore={fetchProducts}
+              hasMore={skip <= allProducts.length}
+              loader={<h4>Loading...</h4>}
+            >
 
               <MainFeed loadingFeed={loading} products={products} /></InfiniteScroll>} />
             <Route path='favorites' element={<FavoritesFeed loadingFeed={loading} products={myFavorites} />} />
@@ -285,7 +261,6 @@ function App() {
             <Route path='follows' element={<Following follows={follows} />} /> </Routes>
         </Router>
       </div>
-    </ProductsContext.Provider>
   );
 }
 

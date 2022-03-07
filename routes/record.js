@@ -23,9 +23,9 @@ recordRoutes.route("/products").get(function (req, res) {
     db_connect
         .collection("products")
         .find({ store: { $in: Object.values(req.query.shops) } })
-        .sort({ date: -1 })
         .skip(parseInt(req.query.skip))
-        .limit(3)
+        .limit(6)
+        .sort({_id:-1})
         .toArray(function (err, result) {
             if (err) throw err;
             db_connect

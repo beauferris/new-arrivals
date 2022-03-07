@@ -1,4 +1,7 @@
 .app{
-    
-    overflow: auto;
+  
+}
+
+body{
+    min-height: 101vh;
 }
