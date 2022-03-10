@@ -25,7 +25,7 @@ import ShopSearch from './pages/ShopSearch';
 
 
 import {
-  Divider, 
+  Divider,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -35,7 +35,7 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react"
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, useLocation} from "react-router-dom";
 import LoginButton from './components/login/LoginButton';
 
 
@@ -50,7 +50,7 @@ function App() {
   const [shops, setShops] = useState([])
   const [skip, setSkip] = useState(0)
   const [shopFeed, setShopFeed] = useState([])
-  const {isOpen, onOpen, onClose} = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
 
   const fetchProducts = () => {
@@ -153,7 +153,7 @@ function App() {
       ...userData,
       shops: shops
     })
-   
+
   }
 
   const allSites = search === "" ? "" :
@@ -196,7 +196,7 @@ function App() {
         url={shop.url}
         value={shop.name}
         checked={userData.shops?.includes(shop.name)}
-        toggle={toggleShop}
+        toggle={isAuthenticated ? toggleShop : onOpen}
         favicon={shop.favicon} />)
     }) : " "
 
@@ -208,7 +208,7 @@ function App() {
         url={shop.url}
         value={shop.name}
         checked={userData?.shops?.includes(shop.name)}
-        toggle={toggleShop}
+        toggle={isAuthenticated ? toggleShop : onOpen}
         favicon={shop.favicon} />)
     })
 
@@ -222,7 +222,7 @@ function App() {
           key={product._id}
           myId={product._id}
           loading={loading}
-          toggleFavorite={isAuthenticated? favoriteItem : onOpen }
+          toggleFavorite={isAuthenticated ? favoriteItem : onOpen}
           store={product.store}
           url={product.url}
           img={product.img}
@@ -238,22 +238,23 @@ function App() {
   return (
     <ProductsContext.Provider value={{ msg: "Feed" }}>
       <div className="App">
+      <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Login to customize feed and favourites</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <LoginButton />
+              </ModalBody>
+            </ModalContent>
+          </Modal>
         <Router>
-         
 
-          <MenuBar  />
-         <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Login to customize feed and favourites</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <LoginButton/>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
+
+          <MenuBar />
+      
           <Divider />
-          
+
           <Routes><Route exact path='/' element={
             <InfiniteScroll
 
@@ -267,8 +268,9 @@ function App() {
                 </p>
               }>
 
-              <MainFeed products={products} /></InfiniteScroll>} />
-            <Route path='favorites' element={<FavoritesFeed loadingFeed={loading} products={myFavorites} />} />
+            <MainFeed products={products} /></InfiniteScroll>} />
+            <Route path='favorites' element={ <FavoritesFeed loadingFeed={loading} products={myFavorites} />} />
+            
             <Route path='shop' element={<ShopSearch
               search={search}
               sites={allSites}

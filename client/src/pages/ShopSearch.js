@@ -1,11 +1,11 @@
-import { Input, Box, InputGroup, InputLeftElement, FormLabel, Heading} from '@chakra-ui/react';
+import { Input, Box, InputGroup, Divider, InputLeftElement, FormLabel, Heading} from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import Shops from '../components/Shops';
 import CategoryCard from '../components/CategoryCard';
 
 const ShopSearch = (props) => {
     return (
-        <Box m={{ base: '2', md: '5' }}>
+        <Box m='2'>
             <Heading mb='5' htmlFor='Search'>Search</Heading>
             <Box className="search">
                 <InputGroup  >
@@ -33,6 +33,7 @@ const ShopSearch = (props) => {
 
                
             </Box>
+            <Divider  m='10' />
         </Box>
     )
 }

@@ -63,7 +63,7 @@ const AddShops = (props) => {
     }
 
     return (
-        <Box m={{ base: '2', md: '5' }}>
+        <Box m='2'>
             <form onSubmit={submitUrl}>
                 <Heading mb='5' htmlFor='url'>Add</Heading>
              <Box >

@@ -8,7 +8,7 @@ const MainFeed = ({ products, loadingFeed }) => {
     const {isLoading } = useAuth0();
     return (
         <>
-            <Skeleton m={{ base: '2', md: '5' }} width='30%' isLoaded={!loadingFeed && !isLoading}>
+            <Skeleton m='2' width='30%' isLoaded={!loadingFeed && !isLoading}>
                
             </Skeleton>
 
