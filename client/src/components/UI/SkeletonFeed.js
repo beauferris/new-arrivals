@@ -6,7 +6,7 @@ const SkeletonFeed = () => {
     const Columns = {
         default: 3,
         1000: 2,
-        700: 1
+        600: 1
     };
     return (
         <Masonry
@@ -14,6 +14,16 @@ const SkeletonFeed = () => {
                 className="my-masonry-grid"
                 columnClassName="my-masonry-grid_column">
           
+                <SkeletonProduct/>
+                <SkeletonProduct/>
+                <SkeletonProduct/>
+                <SkeletonProduct/>
+                <SkeletonProduct/>
+                <SkeletonProduct/>
+                <SkeletonProduct/>
+                <SkeletonProduct/>
+                <SkeletonProduct/>
+                <SkeletonProduct/>
                 <SkeletonProduct/>
                 <SkeletonProduct/>
                 <SkeletonProduct/>

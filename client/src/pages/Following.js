@@ -3,7 +3,7 @@ import Shops from "../components/Shops"
 
 const Following = (props) => {
     return (
-        <Box m={{ base: '3', md: '5' }}>
+        <Box m={{ base: '2', md: '5' }}>
             <Heading mb='5' >Following</Heading>
             <Shops follows={props.follows} />
         </Box>

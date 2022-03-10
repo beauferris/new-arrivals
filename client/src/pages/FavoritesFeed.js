@@ -4,7 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const FavoritesFeed = (props) => {
     const {isLoading } = useAuth0();
     return (<Box>
-         <Skeleton m='2' width='40%' isLoaded={!props.loadingFeed && !isLoading}><Heading>Favorites</Heading></Skeleton>
+         <Skeleton m={{ base: '2', md: '5' }}  isLoaded={!props.loadingFeed && !isLoading}><Heading >Favorites</Heading></Skeleton>
         
         <Feed loadingFeed={isLoading} loading={props.loadingFeed} products={props.products} />
     </Box>

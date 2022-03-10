@@ -1,5 +1,5 @@
 //IoMdMoon, IoMdSunny
-import { Box, Flex, IconButton, Spacer, Skeleton} from "@chakra-ui/react"
+import { Box, Flex, IconButton, Spacer, Skeleton, Heading} from "@chakra-ui/react"
 import { IoIosHeart, IoIosAdd, IoIosSettings, IoMdSearch } from 'react-icons/io'
 import { GiHanger } from 'react-icons/gi'
 import { Link } from "react-router-dom";
@@ -8,15 +8,15 @@ import LogoutButton from '../login/LogoutButton';
 import { useAuth0 } from "@auth0/auth0-react";
 
 const MenuBar = (props) => {
-    const { isAuthenticated } = useAuth0();
+    const { isAuthenticated, isLoading } = useAuth0();
 
     return (
-        <Skeleton m='2' isLoaded={!props.loading && !props.loading}>
+        <Skeleton m={{ base: '2', md: '5' }}isLoaded={!isLoading && !props.loading}>
         <Flex  >
             {isAuthenticated ?
                <>
                         <Link className='logo' to='/'>
-                            <IconButton  mr='1' icon={<GiHanger />} /> </Link>
+                           <Heading >FEED</Heading> </Link>
                         <Spacer />
 
                         <LogoutButton />
@@ -44,7 +44,7 @@ const MenuBar = (props) => {
                 
                     <>
                         <Link className='logo' to='/'>
-                            <IconButton mr='1' icon={<GiHanger />} /> 
+                               <Heading >FEED</Heading>
                             </Link>
                         <Spacer />
                         <LoginButton />

@@ -5,7 +5,7 @@ import CategoryCard from '../components/CategoryCard';
 
 const ShopSearch = (props) => {
     return (
-        <Box m={{ base: '3', md: '5' }}>
+        <Box m={{ base: '2', md: '5' }}>
             <Heading mb='5' htmlFor='Search'>Search</Heading>
             <Box className="search">
                 <InputGroup  >

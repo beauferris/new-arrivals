@@ -241,7 +241,7 @@ function App() {
         <Router>
          
 
-          <MenuBar loading={loading} />
+          <MenuBar  />
          <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
@@ -263,11 +263,11 @@ function App() {
               hasMore={true}
               endMessage={
                 <p style={{ textAlign: 'center' }}>
-                  <b> The End</b>
+                  <b> Add More Shops</b>
                 </p>
               }>
 
-              <MainFeed loadingFeed={loading} products={products} /></InfiniteScroll>} />
+              <MainFeed products={products} /></InfiniteScroll>} />
             <Route path='favorites' element={<FavoritesFeed loadingFeed={loading} products={myFavorites} />} />
             <Route path='shop' element={<ShopSearch
               search={search}

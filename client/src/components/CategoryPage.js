@@ -3,7 +3,7 @@ import { Box, Image,Flex,Text } from "@chakra-ui/react";
 import { useParams } from "react-router-dom"
 import ShopCard from "./UI/ShopCard";
 import Shops from "./Shops";
-
+import { Link } from "react-router-dom";
 const CategoryPage = ({ userData, shops, toggle }) => {
     const { id } = useParams();
 
@@ -23,7 +23,7 @@ const CategoryPage = ({ userData, shops, toggle }) => {
             <Flex m='3' justifyContent='center'>
                 <Image rounded='md' boxShadow='md' w='100%' h='150px' objectFit='cover' src={`/assets/${id}.jpeg`} />
             </Flex>
-            <Text fontWeight='semibold' m='3' mb='8'>Search -> {id} </Text> 
+            <Text fontWeight='semibold' m='3' mb='8'><Link style={{color:"navy"}} to="/shop">Search</Link> > {id} </Text> 
 
             <Box m={{ base: '3', md: '5' }}>
                 <Shops follows={searchShops} />
