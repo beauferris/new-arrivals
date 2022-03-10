@@ -18,8 +18,8 @@ const { MongoClient } = require("mongodb")
 const client = new MongoClient(process.env.ATLAS_URI);
 
 const dbName = 'lets-shop';
-//app.use(express.static(path.join(__dirname, "client", "build")))
-app.use(express.static(path.join(__dirname, "client")))
+app.use(express.static(path.join(__dirname, "client", "build")))
+// app.use(express.static(path.join(__dirname, "client")))
 
 const outer = ["Jackets", "Coats", "Coats, Jackets and Vests",
     "Mens Long Sleeve Jacket", "outer", "Outer", "Outerwear", "Jacket", "Outerwear - Jackets", "Outerwear Mens"]
@@ -164,7 +164,7 @@ setInterval(() => {
 }, 10000 * 60 * 60)
 
 app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "./client/index.html"));
+    res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
 const port = process.env.PORT || 5001;

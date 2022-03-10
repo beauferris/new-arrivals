@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProductsContext from './context/products-context';
 import CategoryPage from './components/CategoryPage';
@@ -24,60 +24,66 @@ import MainFeed from './pages/MainFeed';
 import ShopSearch from './pages/ShopSearch';
 
 
-import { Divider } from "@chakra-ui/react"
+import {
+  Divider, 
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+} from "@chakra-ui/react"
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import LoginButton from './components/login/LoginButton';
+
 
 
 function App() {
-  const { user, isAuthenticated} = useAuth0();
 
+  const { user, isAuthenticated } = useAuth0();
   const [search, setSearch] = useState("")
-
   const [userData, setUserData] = useState([])
   const [allProducts, setProducts] = useState([])
-  const [loading, ] = useState(false)
+  const [loading,] = useState(false)
   const [shops, setShops] = useState([])
   const [skip, setSkip] = useState(0)
+  const [shopFeed, setShopFeed] = useState([])
+  const {isOpen, onOpen, onClose} = useDisclosure()
 
-
-
- 
 
   const fetchProducts = () => {
-    console.log("fetching products")
-
-     axios.get("http://localhost:5001/products", {
-        params: { skip: skip, shops:userData?.shops},
-        paramsSerializer: params => {
-          return qs.stringify(params)
-        }
-      }).then(res=>{
-        setProducts(prevState => {
-          return ([...new Set([...prevState, ...res.data])])
-        })
-
-        setSkip(s=>s + 6)
+    axios.get("https://calm-harbor-25651.herokuapp.com/products", {
+      params: { skip: skip, shops: shopFeed },
+      paramsSerializer: params => {
+        return qs.stringify(params)
+      }
+    }).then(res => {
+      setProducts(prevState => {
+        return ([...new Set([...prevState, ...res.data])])
       })
+      setSkip(s => s + 6)
+    })
   }
 
-  useEffect(()=>{
-      fetchProducts()
-  },[userData])
 
-  // useEffect(()=>{
-  //   setSkip(0)
-  //   setProducts([])
-   
-  // },[userData])
- 
+  useEffect(() => {
+    fetchProducts()
+  }, [shopFeed])
+
+
+  useEffect(() => {
+    setShopFeed(userData?.shops)
+    setSkip(0)
+    setProducts([])
+  }, [isAuthenticated, userData?.shops])
 
   useEffect(() => {
     console.log("updating userData")
     axios.post("https://calm-harbor-25651.herokuapp.com/update", userData)
-    
   }, [userData])
 
-  
   useEffect(() => {
     console.log("fetching userdata")
     const fetchUser = async () => {
@@ -85,7 +91,7 @@ function App() {
         let ud = isAuthenticated ? await axios.get("https://calm-harbor-25651.herokuapp.com/user",
           { params: { email: user.email } }) : ""
         setUserData(ud.data)
-        
+
       } catch (err) {
         console.log(err)
       }
@@ -100,21 +106,11 @@ function App() {
       axios.get("https://calm-harbor-25651.herokuapp.com/shops")
         .then(res => {
           setShops(res.data)
-  
+          setShopFeed(res.data.map(shop => shop.name))
         }).catch(err => console.log(`Error: ${err}`));
     }
     fetchShops()
   }, [])
-
-
-  // useEffect(() => {
-  //   setSkip(0)
-  //   setProducts([])
-  // }, [userData?.shops])
-
-  
-
-
 
   //Search bar 
   const searchListener = (event) => {
@@ -139,8 +135,6 @@ function App() {
           ...userData,
           favorites: favorites
         })
- 
-
       })
   }
 
@@ -159,8 +153,7 @@ function App() {
       ...userData,
       shops: shops
     })
-    setSkip(0)
-    setProducts([])
+   
   }
 
   const allSites = search === "" ? "" :
@@ -229,7 +222,7 @@ function App() {
           key={product._id}
           myId={product._id}
           loading={loading}
-          toggleFavorite={favoriteItem}
+          toggleFavorite={isAuthenticated? favoriteItem : onOpen }
           store={product.store}
           url={product.url}
           img={product.img}
@@ -246,13 +239,25 @@ function App() {
     <ProductsContext.Provider value={{ msg: "Feed" }}>
       <div className="App">
         <Router>
-          <MenuBar loading={loading} />
-          <Divider />
+         
 
+          <MenuBar loading={loading} />
+         <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Login to customize feed and favourites</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <LoginButton/>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+          <Divider />
+          
           <Routes><Route exact path='/' element={
             <InfiniteScroll
-             
-            useWindow={false}
+
+              useWindow={false}
               dataLength={allProducts.length}
               next={fetchProducts}
               hasMore={true}
