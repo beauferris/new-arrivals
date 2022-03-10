@@ -54,7 +54,7 @@ function App() {
 
 
   const fetchProducts = () => {
-    axios.get("https://calm-harbor-25651.herokuapp.com/products", {
+    axios.get("https://shopifyfeed.herokuapp.com/products", {
       params: { skip: skip, shops: shopFeed },
       paramsSerializer: params => {
         return qs.stringify(params)
@@ -81,14 +81,14 @@ function App() {
 
   useEffect(() => {
     console.log("updating userData")
-    axios.post("https://calm-harbor-25651.herokuapp.com/update", userData)
+    axios.post("https://shopifyfeed.herokuapp.com/update", userData)
   }, [userData])
 
   useEffect(() => {
     console.log("fetching userdata")
     const fetchUser = async () => {
       try {
-        let ud = isAuthenticated ? await axios.get("https://calm-harbor-25651.herokuapp.com/user",
+        let ud = isAuthenticated ? await axios.get("https://shopifyfeed.herokuapp.com/user",
           { params: { email: user.email } }) : ""
         setUserData(ud.data)
 
@@ -103,7 +103,7 @@ function App() {
   useEffect(() => {
     console.log("fetching shops")
     const fetchShops = () => {
-      axios.get("https://calm-harbor-25651.herokuapp.com/shops")
+      axios.get("https://shopifyfeed.herokuapp.com/shops")
         .then(res => {
           setShops(res.data)
           setShopFeed(res.data.map(shop => shop.name))
@@ -238,6 +238,7 @@ function App() {
   return (
     <ProductsContext.Provider value={{ msg: "Feed" }}>
       <div className="App">
+        
       <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
@@ -248,11 +249,9 @@ function App() {
               </ModalBody>
             </ModalContent>
           </Modal>
+
         <Router>
-
-
           <MenuBar />
-      
           <Divider />
 
           <Routes><Route exact path='/' element={
