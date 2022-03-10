@@ -12,15 +12,10 @@ import {
 } from "@chakra-ui/react"
 
 import { IoIosHeart, IoIosHeartEmpty } from 'react-icons/io'
-
-//auth
-import { useAuth0 } from "@auth0/auth0-react";
-
 import './ProductItem.css'
 
 const ProductItem = (props) => {
     let favorited = props.isFavorite;
-    let shop = props.icon;
 
     return (
         <Box className="product" >
@@ -64,7 +59,7 @@ const ProductItem = (props) => {
                             bg={'white'}
                             border={'none'}
                            _hover={{transform:"scale(1.3)"}} 
-                            value={props.identifier}
+                            value={props.myId}
                             onClick={props.toggleFavorite}
                             icon={favorited ? <IoIosHeart size={'30px'} style={{ color: 'red' }} /> : <IoIosHeartEmpty size={'30px'} style={{ color: 'red' }} />}
                         /></Skeleton></GridItem>

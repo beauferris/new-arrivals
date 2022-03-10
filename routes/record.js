@@ -2,7 +2,9 @@ const express = require("express");
 const recordRoutes = express.Router();
 const dbo = require("../db/conn");
 const cheerio = require('cheerio');
-const axios = require("axios")
+const axios = require("axios");
+const { ObjectID } = require("mongodb");
+
 
 //get all shops
 recordRoutes.route("/shops").get(function (req, res) {
@@ -16,24 +18,50 @@ recordRoutes.route("/shops").get(function (req, res) {
             res.json(result);
         });
 });
+
+
+//get specific products
+recordRoutes.route("/products/:id").get(function (req, res) {
+    let db_connect = dbo.getDb("lets-shop");
+
+    const ObjectId = require('mongodb').ObjectId
+
+    let id = req.params.id;
+    console.log(id)
+    
+
+    // let id = new ObjectID(req.params.id)
+    // // console.log(typeof id)
+
+    db_connect
+        .collection("products")
+        .find({"_id": ObjectId(id)})
+        .toArray(function (err, result) {
+            if (err) throw err;
+            console.log(result)
+            res.json(result)
+        })
+});
+
 //get all products
 recordRoutes.route("/products").get(function (req, res) {
     let db_connect = dbo.getDb("lets-shop");
 
+    console.log(req.query.shops)
+
     db_connect
         .collection("products")
         .find({ store: { $in: Object.values(req.query.shops) } })
-        .sort({ date: -1 })
         .skip(parseInt(req.query.skip))
-        .limit(3)
+        .limit(6)
+        .sort({ _id: -1 })
         .toArray(function (err, result) {
             if (err) throw err;
-            db_connect
-                .collection("products")
-                .find({ store: { $in: Object.values(req.query.shops) } })
-                .count((err, count) => res.json({ count: count, result: result }));
+            res.json(result)
         })
 });
+
+
 
 //get user data
 recordRoutes.route("/user").get(function (req, res) {

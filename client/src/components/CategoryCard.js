@@ -3,9 +3,7 @@ import Japanese from '../assets/japanese.jpeg'
 import Techwear from '../assets/techwear.jpeg'
 import Streetwear from '../assets/streetwear.png'
 import Vintage from '../assets/vintage.png'
-
-import Shops from "./Shops"
-import { Route,Link, useParams } from "react-router-dom"
+import {Link } from "react-router-dom"
 
 const CategoryCard = ({shops}) => {
 

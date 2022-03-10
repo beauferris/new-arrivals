@@ -1,4 +1,4 @@
-import { Flex, Box, Skeleton, SkeletonCircle, SkeletonText, Stack } from "@chakra-ui/react"
+import { Flex, Skeleton, SkeletonCircle, SkeletonText, Stack } from "@chakra-ui/react"
 
 
 const SkeletonProduct = () => {

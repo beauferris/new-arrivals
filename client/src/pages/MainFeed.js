@@ -1,12 +1,10 @@
 import Feed from "../components/Feed"
-import React, { useContext } from "react"
-import ProductsContext from "../context/products-context"
 import { Heading, Skeleton } from "@chakra-ui/react"
 import { useAuth0 } from "@auth0/auth0-react";
 
 
 const MainFeed = ({ products, loadingFeed }) => {
-    const msg = useContext(ProductsContext)
+    
     const {isLoading } = useAuth0();
     return (
         <>

@@ -1,4 +1,3 @@
-import { Skeleton, SimpleGrid } from "@chakra-ui/react"
 import SkeletonProduct from "./SkeletonProduct"
 import Masonry from "react-masonry-css";
 

@@ -1,9 +1,8 @@
-import { Input, Box, InputGroup, InputLeftElement, FormLabel, Heading, Text, Image } from '@chakra-ui/react';
+import { Input, Box, InputGroup, InputLeftElement, FormLabel, Heading} from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import Shops from '../components/Shops';
 import CategoryCard from '../components/CategoryCard';
 
-import { Outlet } from 'react-router-dom';
 const ShopSearch = (props) => {
     return (
         <Box m={{ base: '3', md: '5' }}>
