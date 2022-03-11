@@ -119,7 +119,7 @@ function App() {
 
   //add/remove products from favorites
   const favoriteItem = (event) => {
-    axios.get(`http://localhost:5001/products/${event.currentTarget.value}`)
+    axios.get(`https://shopifyfeed.herokuapp.com/products/${event.currentTarget.value}`)
       .then(res => {
         let favorites = [...userData.favorites]
         let product = res.data
@@ -136,6 +136,7 @@ function App() {
           favorites: favorites
         })
       })
+
   }
 
   //follow shops
