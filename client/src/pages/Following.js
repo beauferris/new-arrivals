@@ -8,7 +8,7 @@ const Following = (props) => {
         <Box   m='2'>
             <Heading mb='5' >Following</Heading>
             <Shops follows={props.follows} />
-            <Divider  m='10' />
+            <Divider  />
        
             
         </Box>

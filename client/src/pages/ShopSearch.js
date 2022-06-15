@@ -33,7 +33,7 @@ const ShopSearch = (props) => {
 
                
             </Box>
-            <Divider  m='10' />
+            <Divider  />
         </Box>
     )
 }

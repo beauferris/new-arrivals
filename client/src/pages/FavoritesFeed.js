@@ -7,7 +7,7 @@ const FavoritesFeed = (props) => {
          <Skeleton m='2' isLoaded={!props.loadingFeed && !isLoading}><Heading >Favorites</Heading></Skeleton>
         
         <Feed loadingFeed={isLoading} loading={props.loadingFeed} products={props.products} />
-        <Divider  m='10' />
+        <Divider  />
     </Box>
     
     )
