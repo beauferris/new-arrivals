@@ -61,9 +61,9 @@ const MenuBar = (props) => {
                                     <IconButton mr='1' icon={<IoIosSettings />} />
                                 </Link>
 
-                                <Link className='logo' to='/add'>
+                                {/* <Link className='logo' to='/add'>
                                     <IconButton icon={<IoIosAdd />} />
-                                </Link>
+                                </Link> */}
                             </Box></>
                         :
 

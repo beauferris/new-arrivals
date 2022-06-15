@@ -21,30 +21,6 @@ const dbName = 'lets-shop';
 app.use(express.static(path.join(__dirname, "client", "build")))
 // app.use(express.static(path.join(__dirname, "client")))
 
-const outer = ["Jackets", "Coats", "Coats, Jackets and Vests",
-    "Mens Long Sleeve Jacket", "outer", "Outer", "Outerwear", "Jacket", "Outerwear - Jackets", "Outerwear Mens"]
-
-const tops = ["Apparel", "Sweatshirt", "Tee Shirt", "shirt", "Vests", "T-Shirts Mens",
-    "MENS HOODIE",
-    "Clothing", "Tops - Short Sleeve T-Shirts", "T SHIRT",
-    "Sweatshirts", "Tees", "t-shirt", "hoodie", "sweater", "vest", "cardigan", "Tees and Sweats", "Mens Short Sleeve T-Shirt",
-    "Mens Long Sleeve Sweatshirt", "Mens Long Sleeve T-Shirt", "tops", "Tops - Crewnecks", "Tops - Long Sleeve T-Shirts", "Tops - Hoodies", "Tops - Sweaters",
-    "Tops - Long Sleeve Button Downs", "Tops", "Knitwear",
-    "Mens Long Sleeve Polo/Rugby", "Shirts", "Sweaters", "T-Shirts", "T-shirts", "Knits", "Shirt", "Mens Short Sleeve Knit", "Fleece"]
-
-const bottoms = ["Pants Mens", "Bottoms - Chinos", "Pant", "Sweatpants", "Denim Jeans", "Trousers", "Bottoms", "Bottoms - Denim", "Bottoms - Joggers and Sweatpants", "bottoms", "Mens Pant", "Denim", "Pants", "pant",]
-const footwear = ["Footwear - Sneakers", "Sneakers", "Footwear", "Shoes and Boots", "Lace Ups Mens"]
-const accessories = ["Jewelry Mens", "Gloves Mens",
-    "Accessories - Wallets and Keychains", "Deodorant", "Hats", "Hat", "Bags", "Accessories", "Headwear", "Accessories - Bags - Duffles", "Accessories - Bags - Totes", "Accessories - Bags - Backpacks", "Accessories - Headwear - Beanies", "Accessories - Headwear - Caps",
-    "Accessories Beanie", "Mens Brief", "other", "Misc.", "food", "hat", "Gift Cards",]
-
-const home = ["Tarps", "Tarps", "Cups & Mugs", "Chairs", "Poles & Accessories", "Containers & Coolers", "Iron Grill Table", "Tents", "Tables", "Candles", "Lifestyle - Homeware - Blankets", "Accessories Novelty Home", "Apothecary", "kitchen", "incense", "ceramic", "Candle", "Bath Bomb", "Hand Sanitizer", "Gift Set", "Bubble Bath", "Body Lotion", "Bar Soap", "Hand Cream"]
-
-const dresses = ["Dresses", "dress", "Dress", "dresses", "skirt"]
-
-const jewelry = ["rings", "necklace", "ring", "necklaces"]
-
-
 async function run(products) {
     try {
         await client.connect();
@@ -58,8 +34,6 @@ async function run(products) {
         for (const product of myProducts) {
             const check = await col.find({ "id": product.id }).count(1) >= 1
             // console.log(col2.find({"name":product.store}))
-
-
 
             if (check) {
                 //col.deleteMany({"title":product.title});
